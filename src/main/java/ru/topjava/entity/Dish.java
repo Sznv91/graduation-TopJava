@@ -22,6 +22,7 @@ public class Dish {
     public Dish(String name, double cost) {
         this.name = name;
         this.cost = cost;
+        this.date = LocalDate.now();
     }
 
     public Dish(String name, double cost, LocalDate date){
@@ -29,4 +30,13 @@ public class Dish {
         this.date = date;
     }
 
+    /*Just for test*/
+    @Override
+    public String toString() {
+        return "Dish{" +
+                "cost=" + cost +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

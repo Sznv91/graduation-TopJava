@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @Transactional
 public class Start {
@@ -77,20 +77,25 @@ public class Start {
         ArrayList<Dish> dishList = new ArrayList<>();
         Dish dish = new Dish("dish", 12.3);
         Dish dish2 = new Dish("New Dish", 14.88);
+        Dish dishLatest = new Dish("Latest Dish", 100.001, LocalDate.of(2020,11,20));
         /*dish.setRestaurant(restaurant);
         dish2.setRestaurant(restaurant);*/
 //        dish.setId(100003);
         dishList.add(dish);
         dishList.add(dish2);
+        dishList.add(dishLatest);
         restaurant.setMenu(dishList);
         System.out.println(restaurant.getMenu() + " without Db");
 
 
         restaurantRepository.save(restaurant);
 
-        Restaurant fromDb = restaurantRepository.get(100002);
+        Restaurant fromDb = restaurantRepository.getOneWithHistoryDish(100002);
         System.out.println(fromDb.getName() + " From DB");
         System.out.println(fromDb.getMenu());
+
+        Restaurant today = restaurantRepository.getOneWithCurrentDate(100002);
+        System.out.println(today.getMenu() + " Today Dish");
 
 
         ctx.close();
