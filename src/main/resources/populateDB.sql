@@ -12,3 +12,15 @@ INSERT INTO user_roles (role, user_id)
 VALUES ('USER', 100000),
        ('USER', 100001),
        ('ADMIN', 100001);
+
+INSERT INTO RESTAURANTS (NAME)
+VALUES ('first restaurant'),
+       ('second restaurant');
+
+INSERT INTO DISHES(RESTAURANT_ID, NAME, COST, DATE)
+VALUES (100002, 'first dish First restaurant', 1.01, current_date),
+       (100002, 'second dish First restaurant', 2.1, current_date),
+       (100002, 'Late Dish First restaurant', 3.11, '2020-10-20'),
+       (100003, 'first dish Second restaurant', 1.02, current_date),
+       (100003, 'second dish Second restaurant', 2.2, current_date),
+       (100003, 'Late Dish Second restaurant', 3.22, '2020-10-20');
