@@ -77,8 +77,8 @@ public class Start {
         ArrayList<Dish> dishList = new ArrayList<>();
         Dish dish = new Dish("dish", 12.3);
         Dish dish2 = new Dish("New Dish", 14.88);
-        /*dish.setRestaurant(restaurant);
-        dish2.setRestaurant(restaurant);*/
+        dish.setRestaurant(restaurant);
+        dish2.setRestaurant(restaurant);
 //        dish.setId(100003);
         dishList.add(dish);
         dishList.add(dish2);

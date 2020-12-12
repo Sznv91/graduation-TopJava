@@ -29,7 +29,7 @@ CREATE TABLE restaurants
 
 CREATE TABLE dishes
 (
---     id integer default next value for GLOBAL_SEQ not null primary key,
+    id integer default next value for GLOBAL_SEQ not null primary key,
     restaurant_id    INTEGER                           ,
     name             VARCHAR                           NOT NULL,
     cost             DOUBLE                            NOT NULL,
