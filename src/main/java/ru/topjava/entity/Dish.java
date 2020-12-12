@@ -2,48 +2,31 @@ package ru.topjava.entity;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
-//@Entity
 @Embeddable
 @Table(name = "dishes")
 //, uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id"}, name = "DISHES_RESTAURANTS_ID_fk")})
-public class Dish {//extends AbstractNamedEntity {
-/*
+public class Dish {
 
-    @Id
-    private int id;
-*/
-
-//    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)//Lazy
-//    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "restaurant_id")
-//    private Restaurant restaurant;
-/*
-
-    @Column(name = "NAME")
-    private String name;
-*/
-
-    //    @Column(name = "cost")
     private double cost;
 
     private String name;
+
+    private LocalDate date;
 
     public Dish() {
     }
 
     public Dish(String name, double cost) {
-//        this.id = null;
         this.name = name;
         this.cost = cost;
     }
 
-//    public Restaurant getRestaurant() {
-//        return restaurant;
-//    }
+    public Dish(String name, double cost, LocalDate date){
+        this(name,cost);
+        this.date = date;
+    }
 
-//    public void setRestaurant(Restaurant restaurant) {
-//        this.restaurant = restaurant;
-//    }
 }

@@ -29,10 +29,10 @@ CREATE TABLE restaurants
 
 CREATE TABLE dishes
 (
---     id integer default next value for GLOBAL_SEQ not null primary key,
     restaurant_id    INTEGER                           ,
     name             VARCHAR                           NOT NULL,
     cost             DOUBLE                            NOT NULL,
+    date             DATE DEFAULT CURRENT_DATE         NOT NULL,
     /*CONSTRAINT DISHES_RESTAURANTS_ID_fk UNIQUE (restaurant_id,name),
     FOREIGN KEY (restaurant_id) REFERENCES restaurants (id)
                                           ON DELETE CASCADE*/
