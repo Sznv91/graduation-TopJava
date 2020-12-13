@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Transactional
 public class Start {
@@ -71,9 +72,9 @@ public class Start {
 
         RestaurantRepository restaurantRepository = ctx.getBean(RestaurantRepository.class);
 
-        Restaurant restaurant = new Restaurant();
+        Restaurant restaurant = new Restaurant("First rest");
 //        restaurant.setId(100002);
-        restaurant.setName("First rest");
+        //restaurant.setName("First rest");
         ArrayList<Dish> dishList = new ArrayList<>();
         Dish dish = new Dish("dish", 12.3);
         Dish dish2 = new Dish("New Dish", 14.88);
@@ -82,9 +83,10 @@ public class Start {
         dish2.setRestaurant(restaurant);*/
 //        dish.setId(100003);
         dishList.add(dish);
-        dishList.add(dish2);
+//        dishList.add(dish2);
         dishList.add(dishLatest);
         restaurant.setMenu(dishList);
+        restaurant.addDish(dish2);
         System.out.println(restaurant.getMenu() + " without Db");
 
 
@@ -97,6 +99,15 @@ public class Start {
         Restaurant today = restaurantRepository.getOneWithCurrentDate(100002);
         System.out.println(today.getMenu() + " Today Dish");
 
+        List<Restaurant> restaurantsToday = restaurantRepository.getTodayList();
+
+        restaurantsToday.forEach(restaurant1 -> System.out.println(restaurant1.getName() + " From restaurantsToday"));
+
+        restaurantsToday.forEach(restaurant1 -> System.out.println(restaurant1.getMenu() + " Menu from restaurant"));
+
+        List<Restaurant> historyRestaurant = restaurantRepository.getAllHistoryWithDish();
+        historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getName()+ " " + restaurant1.getDate() + " From History"));
+        historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getMenu() + " History Menu"));
 
         ctx.close();
 
