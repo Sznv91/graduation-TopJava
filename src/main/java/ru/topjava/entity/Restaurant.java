@@ -14,6 +14,9 @@ public class Restaurant extends AbstractNamedEntity {
     @CollectionTable(name = "DISHES", joinColumns = @JoinColumn(name = "RESTAURANT_ID"))
     private List<Dish> menu;
 
+    @Column(name = "ENABLE", nullable = false)
+    private Boolean enable;
+
     public void setMenu(Collection<Dish> menu) {
         this.menu = new ArrayList<>(List.copyOf(menu));
     }
@@ -29,6 +32,14 @@ public class Restaurant extends AbstractNamedEntity {
         menu.add(dishes);
     }
 
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public Boolean isEnable() {
+        return enable;
+    }
+
     public Restaurant() {
 
     }
@@ -37,16 +48,22 @@ public class Restaurant extends AbstractNamedEntity {
         super(id, name);
     }
 
-    public Restaurant(String name, Dish... dishes) {
-        this(null, name, dishes);
+    public Restaurant(int id, String name, boolean enable) {
+        super(id, name);
+        this.enable = enable;
     }
 
-    public Restaurant(Integer id, String name, Dish... dishes) {
+    public Restaurant(String name, Dish... dishes) {
+        this(null, name, true, dishes);
+    }
+
+    public Restaurant(Integer id, String name, Boolean isEnable, Dish... dishes) {
         super(id, name);
         menu = new ArrayList<>(List.copyOf(Arrays.asList(dishes)));
+        enable = isEnable;
     }
 
     public Restaurant(Restaurant restaurant) {
-        this(restaurant.getId(), restaurant.getName(), restaurant.getMenu().toArray(new Dish[0]));
+        this(restaurant.getId(), restaurant.getName(), restaurant.isEnable(), restaurant.getMenu().toArray(new Dish[0]));
     }
 }

@@ -38,8 +38,17 @@ class RestaurantServiceTest {
     }
 
     @Test
+    void setDisable(){
+        Restaurant expect = service.getOneWithHistoryMenu(RESTAURANT_ID);
+        expect.setEnable(false);
+        Restaurant actual = service.create(expect, UserTestData.ADMIN_ID);
+        assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
+
+    }
+
+    @Test
     void getOneWithTodayMenu() {
-        Restaurant actual = service.getOneWithTodayMenu(100002);
+        Restaurant actual = service.getOneWithTodayMenu(RESTAURANT_ID);
         assertEquals(RestaurantTo.getRestaurantTo(restaurantWithTodayMenu), RestaurantTo.getRestaurantTo(actual));
     }
 

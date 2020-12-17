@@ -25,6 +25,7 @@ CREATE TABLE restaurants
 (
     id integer default next value for GLOBAL_SEQ not null primary key,
     name             VARCHAR                           NOT NULL,
+    enable           BOOLEAN    DEFAULT TRUE           NOT NULL
 --     date             DATE DEFAULT CURRENT_DATE         NOT NULL,
 );
 

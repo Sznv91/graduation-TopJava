@@ -48,14 +48,17 @@ public class RestaurantRepository {
             dishList.add(new Dish(name, cost, actualDate));
         });
         List<Object[]> restaurant = em.createNativeQuery(
-                "SELECT RESTAURANTS.ID,RESTAURANTS.NAME " +
+                "SELECT RESTAURANTS.ID,RESTAURANTS.NAME, RESTAURANTS.ENABLE " +
                         "FROM RESTAURANTS " +
                         "WHERE RESTAURANTS.ID=:id")
                 .setParameter("id", id).getResultList();
         Restaurant result = new Restaurant();
-        restaurant.stream().map(record -> (String) record[1]).forEach(name -> {
+        restaurant.forEach(record -> {
+            String name = (String) record[1];
+            boolean enable = (boolean) record[2];
             result.setId(id);
             result.setName(name);
+            result.setEnable(enable);
             result.setMenu(dishList);
         });
 
@@ -67,10 +70,11 @@ public class RestaurantRepository {
 
     public List<Restaurant> getTodayList() {
         List<Object[]> joinFromDb = em.createNativeQuery(
-                "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, D.NAME as dname, D.COST, D.DATE as ddate " +
+                "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.ENABLE, D.NAME as dname, D.COST, D.DATE as ddate " +
                         "FROM RESTAURANTS " +
                         "LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID " +
-                        "WHERE D.DATE=:CURRENT_DATE")
+                        "WHERE D.DATE=:CURRENT_DATE " +
+                        "AND RESTAURANTS.ENABLE = TRUE")
                 .setParameter("CURRENT_DATE", LocalDate.now()).getResultList();
 
         return restaurantMapper(joinFromDb);
@@ -78,7 +82,7 @@ public class RestaurantRepository {
 
     public List<Restaurant> getAllHistoryWithDish() {
         List<Object[]> joinFromDb = em.createNativeQuery(
-                "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, D.NAME as dname, D.COST, D.DATE as ddate " +
+                "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.ENABLE, D.NAME as dname, D.COST, D.DATE as ddate " +
                         "FROM RESTAURANTS " +
                         "LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID")
                 .getResultList();
@@ -91,12 +95,13 @@ public class RestaurantRepository {
         resultList.forEach((object -> {
             int restaurantId = (Integer) object[0];
             String restaurantName = (String) object[1];
+            Boolean enable = (Boolean) object[2];
 
-            String dishName = (String) object[2];
-            double dishCost = Double.parseDouble(String.valueOf(object[3]));
-            LocalDate dishDate = ((java.sql.Date) object[4]).toLocalDate();
+            String dishName = (String) object[3];
+            double dishCost = Double.parseDouble(String.valueOf(object[4]));
+            LocalDate dishDate = ((java.sql.Date) object[5]).toLocalDate();
 
-            result.putIfAbsent(restaurantId, new Restaurant(restaurantId, restaurantName));
+            result.putIfAbsent(restaurantId, new Restaurant(restaurantId, restaurantName, enable));
             result.get(restaurantId).addDish(new Dish(dishName, dishCost, dishDate));
         }));
         return new ArrayList<>(result.values());
