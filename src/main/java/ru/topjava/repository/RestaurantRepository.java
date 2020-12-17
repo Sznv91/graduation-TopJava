@@ -14,7 +14,7 @@ import java.util.*;
 @Repository
 public class RestaurantRepository {
 
-    private RestaurantCrudRepository repository;
+    private final RestaurantCrudRepository repository;
 
     @PersistenceContext
     EntityManager em;
