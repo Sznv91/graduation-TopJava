@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.topjava.entity.AbstractBaseEntity;
 import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
+import ru.topjava.utils.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,8 +25,8 @@ public class RestaurantRepository {
         this.repository = repository;
     }
 
-    public void save(Restaurant restaurant) {
-        repository.save(restaurant);
+    public Restaurant save(Restaurant restaurant) {
+        return repository.save(restaurant);
     }
 
     public Restaurant getOneWithHistoryDish(int id) { //Get with ALL DATE
@@ -33,9 +34,9 @@ public class RestaurantRepository {
     }
 
     public Restaurant getOneWithCurrentDate(@Param("id") int id) {
-        List<Object[]> todayMenuObj = em.createNativeQuery("SELECT NAME,COST,DATE FROM DISHES WHERE RESTAURANT_ID=:id AND DATE=:current_date").setParameter("current_date", LocalDate.now()).setParameter("id", id).getResultList();
+        List<Object[]> todayMenuObj = em.createNativeQuery("SELECT NAME,COST,DATE FROM DISHES WHERE RESTAURANT_ID=:id AND DATE=:current_date ORDER BY NAME ASC").setParameter("current_date", LocalDate.now()).setParameter("id", id).getResultList();
 
-        Set<Dish> dishSet = DishMapper(todayMenuObj);
+        List<Dish> dishSet = DishMapper(todayMenuObj);
         /*new HashSet<>();
         todayMenuObj.forEach((record) -> {
             String name = (String) record[0];
@@ -51,8 +52,10 @@ public class RestaurantRepository {
             result.setMenu(dishSet);
         });
 
-
-        return result;
+        if (result.getId() != null) {
+            return result;
+        }
+        throw new NotFoundException("Restaurant id: " + id + " not found in DB");
     }
 
     public List<Restaurant> getTodayList() {
@@ -65,18 +68,19 @@ public class RestaurantRepository {
 
         Map<Integer, Restaurant> restaurantMap = restaurantList.stream().collect(Collectors.toMap(AbstractBaseEntity::getId, restaurant -> restaurant, (a, b) -> b));
 */
-        List<Object[]> joinFromDb = em.createNativeQuery("SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.DATE, D.RESTAURANT_ID, D.NAME as dname, D.COST, D.DATE as ddate FROM RESTAURANTS LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID WHERE RESTAURANTS.DATE=:CURRENT_DATE AND D.DATE=:CURRENT_DATE").setParameter("CURRENT_DATE", LocalDate.now()).getResultList();
+        List<Object[]> joinFromDb = em.createNativeQuery("SELECT RESTAURANTS.ID, RESTAURANTS.NAME, D.RESTAURANT_ID, D.NAME as dname, D.COST, D.DATE as ddate FROM RESTAURANTS LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID WHERE D.DATE=:CURRENT_DATE").setParameter("CURRENT_DATE", LocalDate.now()).getResultList(); //        List<Object[]> joinFromDb = em.createNativeQuery("SELECT RESTAURANTS.ID, RESTAURANTS.NAME, /*RESTAURANTS.DATE,*/ D.RESTAURANT_ID, D.NAME as dname, D.COST, D.DATE as ddate FROM RESTAURANTS LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID WHERE RESTAURANTS.DATE=:CURRENT_DATE AND D.DATE=:CURRENT_DATE").setParameter("CURRENT_DATE", LocalDate.now()).getResultList();
+
         return restaurantMapper(joinFromDb);//new ArrayList<Restaurant>(restaurantMap.values());//restaurantList;
     }
 
     public List<Restaurant> getAllHistoryWithDish() {
-        List<Object[]> joinFromDb = em.createNativeQuery("SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.DATE, D.RESTAURANT_ID, D.NAME as dname, D.COST, D.DATE as ddate FROM RESTAURANTS LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID").getResultList();
+        List<Object[]> joinFromDb = em.createNativeQuery("SELECT RESTAURANTS.ID, RESTAURANTS.NAME, D.RESTAURANT_ID, D.NAME as dname, D.COST, D.DATE as ddate FROM RESTAURANTS LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID").getResultList();
 
         return restaurantMapper(joinFromDb);
     }
 
-    private Set<Dish> DishMapper(List<Object[]> dishes) {
-        Set<Dish> dishSet = new HashSet<>();
+    private List<Dish> DishMapper(List<Object[]> dishes) {
+        List<Dish> dishSet = new ArrayList<>();
         dishes.forEach((record) -> {
             String name = (String) record[0];
             double cost = (Double) record[1];
@@ -91,14 +95,14 @@ public class RestaurantRepository {
         resultList.stream().forEach((object -> {
             int restaurantId = (Integer) object[0];
             String restaurantName = (String) object[1];
-            LocalDate restaurantDate = ((java.sql.Date) object[2]).toLocalDate();
+//            LocalDate restaurantDate = ((java.sql.Date) object[2]).toLocalDate();
 
-            int restaurantIdFk = (Integer) object[3];//Integer.parseInt(String.valueOf(object[3]));
-            String dishName = (String) object[4];
-            Double dishCost = Double.parseDouble(String.valueOf(object[5]));
-            LocalDate dishDate = ((java.sql.Date) object[6]).toLocalDate();
+            int restaurantIdFk = (Integer) object[2];//Integer.parseInt(String.valueOf(object[3]));
+            String dishName = (String) object[3];
+            Double dishCost = Double.parseDouble(String.valueOf(object[4]));
+            LocalDate dishDate = ((java.sql.Date) object[5]).toLocalDate();
 
-            result.putIfAbsent(restaurantId, new Restaurant(restaurantId, restaurantName, restaurantDate));
+            result.putIfAbsent(restaurantId, new Restaurant(restaurantId, restaurantName/*, restaurantDate*/));
             result.get(restaurantId).addDish(new Dish(dishName, dishCost, dishDate));
 
         }));

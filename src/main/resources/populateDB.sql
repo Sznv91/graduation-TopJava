@@ -13,10 +13,10 @@ VALUES ('USER', 100000),
        ('USER', 100001),
        ('ADMIN', 100001);
 
-INSERT INTO RESTAURANTS (NAME,DATE)
-VALUES ('first restaurant', CURRENT_DATE),
-       ('second restaurant', CURRENT_DATE),
-       ('Latest restaurant', '2020-10-20');
+INSERT INTO RESTAURANTS (NAME/*,DATE*/)
+VALUES ('first restaurant'/*, CURRENT_DATE*/),
+       ('second restaurant'/*, CURRENT_DATE*/),
+       ('Latest restaurant'/*, '2020-10-20'*/);
 
 INSERT INTO DISHES(RESTAURANT_ID, NAME, COST, DATE)
 VALUES (100002, 'first dish First restaurant', 1.01, current_date),

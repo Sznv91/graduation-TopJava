@@ -54,13 +54,4 @@ public class Dish {
         this.date = date;
     }
 
-    /*Just for test*/
-    @Override
-    public String toString() {
-        return "Dish{" +
-                "cost=" + cost +
-                ", name='" + name + '\'' +
-                ", date=" + date +
-                '}';
-    }
 }

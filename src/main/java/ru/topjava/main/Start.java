@@ -106,7 +106,7 @@ public class Start {
         restaurantsToday.forEach(restaurant1 -> System.out.println(restaurant1.getMenu() + " Menu from restaurant"));
 
         List<Restaurant> historyRestaurant = restaurantRepository.getAllHistoryWithDish();
-        historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getName()+ " " + restaurant1.getDate() + " From History"));
+        historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getName()+ " " + /*restaurant1.getDate() +*/ " From History"));
         historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getMenu() + " History Menu"));
 
         ctx.close();
