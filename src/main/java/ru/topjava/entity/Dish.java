@@ -1,7 +1,8 @@
 package ru.topjava.entity;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Table;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
@@ -10,10 +11,13 @@ import java.time.LocalDate;
 //, uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id"}, name = "DISHES_RESTAURANTS_ID_fk")})
 public class Dish {
 
+
     private double cost;
 
     private String name;
 
+    @Embedded
+    @Type(type = "java.time.LocalDate")
     private LocalDate date;
 
     public double getCost() {
@@ -36,6 +40,9 @@ public class Dish {
         return date;
     }
 
+//    @Embedded
+//    @Type(type = "java.time.LocalDate")
+    @Transient
     public void setDate(LocalDate date) {
         this.date = date;
     }

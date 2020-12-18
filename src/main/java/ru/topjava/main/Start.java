@@ -8,8 +8,11 @@ import ru.topjava.config.GraduationJpaConfig;
 import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.User;
+import ru.topjava.entity.Vote;
 import ru.topjava.repository.RestaurantRepository;
 import ru.topjava.repository.UserCrudRepository;
+import ru.topjava.repository.VoteRepository;
+import ru.topjava.service.RestaurantService;
 import ru.topjava.service.UserService;
 import ru.topjava.utils.NotFoundException;
 
@@ -19,6 +22,7 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,73 +45,29 @@ public class Start {
         runner.runScript(dbInit);
         runner.runScript(populate);
 
-
-        UserCrudRepository repository = ctx.getBean(UserCrudRepository.class);
-        UserCrudRepository customRepo = ctx.getBean(UserCrudRepository.class);
-
-//        User fromDb = repository.getOne(100000);
-
-//        System.out.println(fromDb.getName());
-
-        //User toDB = new User(3,"Test User");
-        //User fromSave = repository.save(toDB);
-        //System.out.println(fromSave.getName() + "From DB");
-
-//        User fromCustomRepo = customRepo.getOne(100000);
-//        System.out.println(fromCustomRepo.getName() + " From custom ID");
+//
+//        UserCrudRepository repository = ctx.getBean(UserCrudRepository.class);
+//        UserCrudRepository customRepo = ctx.getBean(UserCrudRepository.class);
 
         UserService userService = ctx.getBean(UserService.class);
+        RestaurantService restaurantService = ctx.getBean(RestaurantService.class);
+        VoteRepository voteRepository = ctx.getBean(VoteRepository.class);
 
-        User fromService = userService.getUser(100000);
-        System.out.println(fromService.getRoles() + " User from Service");
-        try {
-            User fromServiceNotFound = userService.getUser(10000);
-            System.out.println("Except Runtime Exception");
-        } catch (NotFoundException e) {
+        User user = userService.getUser(100000);
+        Restaurant restaurant = restaurantService.getOneWithTodayMenu(100003);
+        Restaurant restaurant1 = restaurantService.getOneWithTodayMenu(100002);
 
-        }
+        System.out.println(user.getName() + " User Name from service. " + restaurant.getName() + " Restaurant name");
 
+        Vote firstVote = new Vote(LocalDateTime.now(), restaurant, user);
+        Vote secondVote = new Vote(LocalDateTime.of(2020, 12,18, 10,9),restaurant1,user);
+        Vote thirdVote = new Vote(LocalDateTime.of(2020,12,17,15,14), restaurant1,user);
+        voteRepository.save(firstVote);
+        voteRepository.save(secondVote);
+        voteRepository.save(thirdVote);
 
-
-
-        RestaurantRepository restaurantRepository = ctx.getBean(RestaurantRepository.class);
-
-        Restaurant restaurant = new Restaurant("First rest");
-//        restaurant.setId(100002);
-        //restaurant.setName("First rest");
-        ArrayList<Dish> dishList = new ArrayList<>();
-        Dish dish = new Dish("dish", 12.3);
-        Dish dish2 = new Dish("New Dish", 14.88);
-        Dish dishLatest = new Dish("Latest Dish", 100.001, LocalDate.of(2020,11,20));
-        /*dish.setRestaurant(restaurant);
-        dish2.setRestaurant(restaurant);*/
-//        dish.setId(100003);
-        dishList.add(dish);
-//        dishList.add(dish2);
-        dishList.add(dishLatest);
-        restaurant.setMenu(dishList);
-        restaurant.addDish(dish2);
-        System.out.println(restaurant.getMenu() + " without Db");
-
-
-        restaurantRepository.save(restaurant);
-
-        Restaurant fromDb = restaurantRepository.getOneWithHistoryDish(100002);
-        System.out.println(fromDb.getName() + " From DB");
-        System.out.println(fromDb.getMenu());
-
-        Restaurant today = restaurantRepository.getOneWithCurrentDate(100002);
-        System.out.println(today.getMenu() + " Today Dish");
-
-        List<Restaurant> restaurantsToday = restaurantRepository.getTodayList();
-
-        restaurantsToday.forEach(restaurant1 -> System.out.println(restaurant1.getName() + " From restaurantsToday"));
-
-        restaurantsToday.forEach(restaurant1 -> System.out.println(restaurant1.getMenu() + " Menu from restaurant"));
-
-        List<Restaurant> historyRestaurant = restaurantRepository.getAllHistoryWithDish();
-        historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getName()+ " " + /*restaurant1.getDate() +*/ " From History"));
-        historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getMenu() + " History Menu"));
+        Vote voteFromDb = voteRepository.get(100005);
+        System.out.println(voteFromDb.getUser().getId() + " UserId from entity Vote from DB");
 
         ctx.close();
 

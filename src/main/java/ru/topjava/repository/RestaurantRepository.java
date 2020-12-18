@@ -1,5 +1,6 @@
 package ru.topjava.repository;
 
+import org.hibernate.criterion.CriteriaQuery;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.topjava.entity.Dish;
@@ -8,6 +9,7 @@ import ru.topjava.utils.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -69,7 +71,16 @@ public class RestaurantRepository {
     }
 
     public List<Restaurant> getTodayList() {
-        List<Object[]> joinFromDb = em.createNativeQuery(
+//        CriteriaQuery<Dish> dishCriteria = (CriteriaQuery<Dish>) em.getCriteriaBuilder().createQuery(Dish.class);
+
+        List<Restaurant> result = em.createQuery("" +
+                "SELECT restaurant " +
+                "FROM Restaurant restaurant " +
+                "INNER JOIN restaurant.menu dish " +
+                "WHERE dish.date='2020-12-18' " +
+                "AND restaurant.enable=true", Restaurant.class)/*.setParameter("current_date", LocalDate.now())*/.getResultList(); /*
+//        List<Restaurant> result = em.createQuery("SELECT d FROM Restaurant .menu d JOIN Restaurant r WHERE d.date=:CURRENT_DATE AND r.enable", Restaurant.class).setParameter("CURRENT_DATE", LocalDate.now()).getResultList();
+    /*    List<Object[]> joinFromDb = em.createNativeQuery(
                 "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.ENABLE, D.NAME as dname, D.COST, D.DATE as ddate " +
                         "FROM RESTAURANTS " +
                         "LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID " +
@@ -77,17 +88,24 @@ public class RestaurantRepository {
                         "AND RESTAURANTS.ENABLE = TRUE")
                 .setParameter("CURRENT_DATE", LocalDate.now()).getResultList();
 
-        return restaurantMapper(joinFromDb);
+        return restaurantMapper(joinFromDb);*/
+        return result;
     }
 
     public List<Restaurant> getAllHistoryWithDish() {
+        List<Restaurant> result = em.createQuery("SELECT r FROM Restaurant r", Restaurant.class).getResultList();/*
         List<Object[]> joinFromDb = em.createNativeQuery(
                 "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.ENABLE, D.NAME as dname, D.COST, D.DATE as ddate " +
                         "FROM RESTAURANTS " +
                         "LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID")
                 .getResultList();
 
-        return restaurantMapper(joinFromDb);
+        return restaurantMapper(joinFromDb);*/
+        return result;
+    }
+
+    public void testMethod(){
+        em.createQuery("SELECT c FROM Restaurant c WHERE Restaurant .menu.date=:current_date", Restaurant.class).setParameter("current_date", LocalDate.now()).getSingleResult();
     }
 
     private List<Restaurant> restaurantMapper(List<Object[]> resultList) {
