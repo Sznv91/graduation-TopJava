@@ -10,8 +10,9 @@ import java.util.*;
 @Table(name = "restaurants")
 public class Restaurant extends AbstractNamedEntity {
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "DISHES", joinColumns = @JoinColumn(name = "RESTAURANT_ID"))
+    @OneToMany(mappedBy = "restaurant",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinTable(name = "DISHES", joinColumns = @JoinColumn (name = "RESTAURANT_ID"))
+//    @JoinColumn(name = "RESTAURANT_ID")
     private List<Dish> menu;
 
     @Column(name = "ENABLE", nullable = false)

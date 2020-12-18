@@ -21,7 +21,6 @@ import static ru.topjava.service.RestaurantTestData.*;
 @SpringJUnitConfig(GraduationJpaConfig.class)
 @Sql(scripts = "classpath:populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 class RestaurantServiceTest {
-
     @Autowired
     RestaurantService service;
 

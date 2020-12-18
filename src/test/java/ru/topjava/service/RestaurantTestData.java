@@ -11,7 +11,6 @@ import java.util.List;
 import static ru.topjava.entity.AbstractBaseEntity.START_SEQ;
 
 public class RestaurantTestData {
-
     public static final int RESTAURANT_ID = START_SEQ + 2;
 
     public static final Restaurant restaurantWithTodayMenu = new Restaurant(100002, "first restaurant", true, new Dish("first dish First restaurant", 1.01, LocalDate.now()), new Dish("second dish First restaurant", 2.1, LocalDate.now()));
@@ -24,9 +23,7 @@ public class RestaurantTestData {
         Restaurant second = new Restaurant(anotherRestaurantWithTodayMenu);
         second.addDish(new Dish("Late Dish Second restaurant", 3.22, LocalDate.of(2020, 10, 20)));
         Restaurant onlyHistoryDish = new Restaurant(100004, "Latest restaurant", true, new Dish("first Dish Latest restaurant", 3.22, LocalDate.of(2020, 10, 20)), new Dish("second Dish Latest restaurant", 3.22, LocalDate.of(2020, 10, 20)), new Dish("Latest Dish Latest restaurant", 3.22, LocalDate.of(2020, 10, 15)));
-//        return new ArrayList<>(Arrays.asList(second, first, onlyHistoryDish));
         return new ArrayList<>(Arrays.asList(first, second, onlyHistoryDish));
-
     }
 
     public static Restaurant getOneWithHistoryDish(){

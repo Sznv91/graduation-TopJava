@@ -26,6 +26,12 @@ public class RestaurantService {
     public Restaurant create(Restaurant restaurant, int userId) {
         User user = userService.getUser(userId);
         if (user.getRoles().contains(Role.ADMIN)) {
+            restaurant.getMenu().forEach((dish)->{
+                if (dish.isNew()){
+                    dish.setRestaurant(restaurant);
+                }
+            });
+
             return repository.save(restaurant);
         } else {
             throw new PermissionException("User id: " + userId + "haven't role ADMIN");
