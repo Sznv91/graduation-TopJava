@@ -32,38 +32,19 @@ public class RestaurantRepository {
     }
 
     public Restaurant getOneWithCurrentDate(@Param("id") int id) {
-        List<Object[]> todayMenuObj = em.createNativeQuery(
-                "SELECT NAME,COST,DATE " +
-                        "FROM DISHES " +
-                        "WHERE RESTAURANT_ID=:id AND DATE=:current_date " +
-                        "ORDER BY NAME ASC")
-                .setParameter("current_date", LocalDate.now()).setParameter("id", id).getResultList();
 
-        List<Dish> dishList = new ArrayList<>();
-        new HashSet<>();
-        todayMenuObj.forEach((record) -> {
-            String name = (String) record[0];
-            double cost = (Double) record[1];
-            LocalDate actualDate = ((java.sql.Date) record[2]).toLocalDate();
-            dishList.add(new Dish(name, cost, actualDate));
-        });
-        List<Object[]> restaurant = em.createNativeQuery(
-                "SELECT RESTAURANTS.ID,RESTAURANTS.NAME, RESTAURANTS.ENABLE " +
+        List<Object[]> joinFromDb = em.createNativeQuery(
+                "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.ENABLE, D.NAME as dname, D.COST, D.DATE as ddate " +
                         "FROM RESTAURANTS " +
-                        "WHERE RESTAURANTS.ID=:id")
-                .setParameter("id", id).getResultList();
-        Restaurant result = new Restaurant();
-        restaurant.forEach(record -> {
-            String name = (String) record[1];
-            boolean enable = (boolean) record[2];
-            result.setId(id);
-            result.setName(name);
-            result.setEnable(enable);
-            result.setMenu(dishList);
-        });
+                        "LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID " +
+                        "WHERE D.DATE=:CURRENT_DATE " +
+                        "AND RESTAURANTS.ID =:id")
+                .setParameter("CURRENT_DATE", LocalDate.now())
+                .setParameter("id", id)
+                .getResultList();
 
-        if (result.getId() != null) {
-            return result;
+        if (joinFromDb.size() > 0) {
+            return restaurantMapper(joinFromDb).get(0);
         }
         throw new NotFoundException("Restaurant id: " + id + " not found in DB");
     }
@@ -88,6 +69,10 @@ public class RestaurantRepository {
                 .getResultList();
 
         return restaurantMapper(joinFromDb);
+    }
+
+    public Restaurant getReference (int id){
+        return em.getReference(Restaurant.class, id);
     }
 
     private List<Restaurant> restaurantMapper(List<Object[]> resultList) {

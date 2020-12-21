@@ -28,7 +28,7 @@ class UserServiceTest {
 
     @Test
     void getById() {
-        User actual = service.getUser(ADMIN_ID);
+        User actual = service.get(ADMIN_ID);
         assertEquals(getUserTo(admin), getUserTo(actual));
 
     }
@@ -50,7 +50,7 @@ class UserServiceTest {
     @Test
     void Update() {
         User actual = service.update(getUpdated());
-        User expected = service.getUser(USER_ID);
+        User expected = service.get(USER_ID);
         assertEquals(getUserTo(expected), getUserTo(actual));
     }
 

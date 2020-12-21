@@ -11,7 +11,7 @@ import ru.topjava.utils.PermissionException;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class RestaurantService {
 
     private final RestaurantRepository repository;
@@ -23,12 +23,13 @@ public class RestaurantService {
         this.userService = userService;
     }
 
-    public Restaurant create(Restaurant restaurant, int userId) {
-        User user = userService.getUser(userId);
+    @Transactional
+    public Restaurant create(Restaurant restaurant, User user) {
+        //User user = userService.getUser(userId);
         if (user.getRoles().contains(Role.ADMIN)) {
             return repository.save(restaurant);
         } else {
-            throw new PermissionException("User id: " + userId + "haven't role ADMIN");
+            throw new PermissionException("User id: " + user.getId() + "haven't role ADMIN");
         }
     }
 
@@ -48,6 +49,9 @@ public class RestaurantService {
         return repository.getAllHistoryWithDish();
     }
 
+    public Restaurant getReference (int id){
+        return repository.getReference(id);
+    }
 
 
 

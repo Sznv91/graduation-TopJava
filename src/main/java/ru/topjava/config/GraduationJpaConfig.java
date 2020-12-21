@@ -17,7 +17,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "ru.topjava.repository")
-@ComponentScan(value = {"ru.topjava.service", "ru.topjava.repository"})
+@ComponentScan(value = {"ru.topjava.service", "ru.topjava.repository", "ru.topjava.controller"})
 @PropertySource("persistence-graduation.properties")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)

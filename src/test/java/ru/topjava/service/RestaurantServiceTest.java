@@ -28,20 +28,20 @@ class RestaurantServiceTest {
     @Test
     void createByAdmin() {
         Restaurant expect = getNew();
-        Restaurant actual = service.create(expect, UserTestData.ADMIN_ID);
+        Restaurant actual = service.create(expect, UserTestData.admin);
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
     }
 
     @Test
     void createByUser() {
-        assertThrows(PermissionException.class, () -> service.create(getNew(), UserTestData.USER_ID));
+        assertThrows(PermissionException.class, () -> service.create(getNew(), UserTestData.user));
     }
 
     @Test
     void setDisable(){
         Restaurant expect = service.getOneWithHistoryMenu(RESTAURANT_ID);
         expect.setEnable(false);
-        Restaurant actual = service.create(expect, UserTestData.ADMIN_ID);
+        Restaurant actual = service.create(expect, UserTestData.admin);
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
 
     }

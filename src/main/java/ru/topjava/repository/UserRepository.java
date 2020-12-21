@@ -68,6 +68,10 @@ public class UserRepository {
 //        return true;
     }
 
+    public User getReference (int id){
+        return em.getReference(User.class, id);
+    }
+
     private User save(User user) {
         return repository.save(user);
     }

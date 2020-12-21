@@ -5,22 +5,16 @@ import com.ibatis.common.resources.Resources;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.topjava.config.GraduationJpaConfig;
-import ru.topjava.entity.Dish;
+import ru.topjava.controller.GuardController;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.User;
-import ru.topjava.repository.RestaurantRepository;
-import ru.topjava.repository.UserCrudRepository;
-import ru.topjava.service.UserService;
-import ru.topjava.utils.NotFoundException;
+import ru.topjava.entity.Vote;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Transactional
 public class Start {
@@ -32,7 +26,7 @@ public class Start {
         ctx.register(GraduationJpaConfig.class);
         ctx.refresh();
 
-                            /*INIT DB*/
+        /*INIT DB*/
         DataSource dataSource = (DataSource) ctx.getBean("dataSource");
         Connection connection = dataSource.getConnection();
         ScriptRunner runner = new ScriptRunner(connection, false, true);
@@ -41,74 +35,27 @@ public class Start {
         runner.runScript(dbInit);
         runner.runScript(populate);
 
+        /*UserService userService = ctx.getBean(UserService.class);
+        RestaurantService restaurantService = ctx.getBean(RestaurantService.class);
+        VoteRepository voteRepository = ctx.getBean(VoteRepository.class);
 
-        UserCrudRepository repository = ctx.getBean(UserCrudRepository.class);
-        UserCrudRepository customRepo = ctx.getBean(UserCrudRepository.class);
+        User user = userService.getUser(100001);
+        User admin = userService.getUser(100000);
+        Restaurant restaurant = restaurantService.getOneWithTodayMenu(100003);
+        Vote firstVote = new Vote(restaurant, user);
+        voteRepository.create(firstVote);
 
-//        User fromDb = repository.getOne(100000);
+        System.out.println("UserID: " + admin.getId() + " " + voteRepository.hasVoteToday(admin) + " Have voice today");
+*/
 
-//        System.out.println(fromDb.getName());
+        GuardController controller = ctx.getBean(GuardController.class);
 
-        //User toDB = new User(3,"Test User");
-        //User fromSave = repository.save(toDB);
-        //System.out.println(fromSave.getName() + "From DB");
-
-//        User fromCustomRepo = customRepo.getOne(100000);
-//        System.out.println(fromCustomRepo.getName() + " From custom ID");
-
-        UserService userService = ctx.getBean(UserService.class);
-
-        User fromService = userService.getUser(100000);
-        System.out.println(fromService.getRoles() + " User from Service");
-        try {
-            User fromServiceNotFound = userService.getUser(10000);
-            System.out.println("Except Runtime Exception");
-        } catch (NotFoundException e) {
-
-        }
-
-
-
-
-        RestaurantRepository restaurantRepository = ctx.getBean(RestaurantRepository.class);
-
-        Restaurant restaurant = new Restaurant("First rest");
-//        restaurant.setId(100002);
-        //restaurant.setName("First rest");
-        ArrayList<Dish> dishList = new ArrayList<>();
-        Dish dish = new Dish("dish", 12.3);
-        Dish dish2 = new Dish("New Dish", 14.88);
-        Dish dishLatest = new Dish("Latest Dish", 100.001, LocalDate.of(2020,11,20));
-        /*dish.setRestaurant(restaurant);
-        dish2.setRestaurant(restaurant);*/
-//        dish.setId(100003);
-        dishList.add(dish);
-//        dishList.add(dish2);
-        dishList.add(dishLatest);
-        restaurant.setMenu(dishList);
-        restaurant.addDish(dish2);
-        System.out.println(restaurant.getMenu() + " without Db");
-
-
-        restaurantRepository.save(restaurant);
-
-        Restaurant fromDb = restaurantRepository.getOneWithHistoryDish(100002);
-        System.out.println(fromDb.getName() + " From DB");
-        System.out.println(fromDb.getMenu());
-
-        Restaurant today = restaurantRepository.getOneWithCurrentDate(100002);
-        System.out.println(today.getMenu() + " Today Dish");
-
-        List<Restaurant> restaurantsToday = restaurantRepository.getTodayList();
-
-        restaurantsToday.forEach(restaurant1 -> System.out.println(restaurant1.getName() + " From restaurantsToday"));
-
-        restaurantsToday.forEach(restaurant1 -> System.out.println(restaurant1.getMenu() + " Menu from restaurant"));
-
-        List<Restaurant> historyRestaurant = restaurantRepository.getAllHistoryWithDish();
-        historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getName()+ " " + /*restaurant1.getDate() +*/ " From History"));
-        historyRestaurant.forEach(restaurant1 -> System.out.println(restaurant1.getMenu() + " History Menu"));
-
+        User user = controller.getUser(100001);
+        Restaurant restaurant = controller.getRestaurantWithTodayMenu(100003);
+        Restaurant restaurant2 = controller.getRestaurantWithTodayMenu(100002);
+        Vote firstVote = controller.saveVote(restaurant.getId(), user.getId());
+        System.out.println(controller.votedToday(user.getId()));
+        Vote secondVote = controller.saveVote(restaurant2.getId(), user.getId());
         ctx.close();
 
 
