@@ -16,7 +16,7 @@ public class RestaurantTestData {
 
     public static final Restaurant restaurantWithTodayMenu = new Restaurant(100002, "first restaurant", true, new Dish("first dish First restaurant", 1.01, LocalDate.now()), new Dish("second dish First restaurant", 2.1, LocalDate.now()));
     private static final Restaurant anotherRestaurantWithTodayMenu = new Restaurant(100003, "second restaurant", true, new Dish("first dish Second restaurant", 1.02), new Dish("second dish Second restaurant", 2.2));
-    public static final List<Restaurant> allRestaurantWithTodayMenu = new ArrayList<>(Arrays.asList(anotherRestaurantWithTodayMenu, restaurantWithTodayMenu));
+    public static final List<Restaurant> allRestaurantWithTodayMenu = new ArrayList<>(Arrays.asList(restaurantWithTodayMenu, anotherRestaurantWithTodayMenu));
 
     public static List<Restaurant> getAllRestaurantWithHistoryDish() {
         Restaurant first = new Restaurant(restaurantWithTodayMenu);
@@ -24,7 +24,7 @@ public class RestaurantTestData {
         Restaurant second = new Restaurant(anotherRestaurantWithTodayMenu);
         second.addDish(new Dish("Late Dish Second restaurant", 3.22, LocalDate.of(2020, 10, 20)));
         Restaurant onlyHistoryDish = new Restaurant(100004, "Latest restaurant", true, new Dish("first Dish Latest restaurant", 3.22, LocalDate.of(2020, 10, 20)), new Dish("second Dish Latest restaurant", 3.22, LocalDate.of(2020, 10, 20)), new Dish("Latest Dish Latest restaurant", 3.22, LocalDate.of(2020, 10, 15)));
-        return new ArrayList<>(Arrays.asList(second, first, onlyHistoryDish));
+        return new ArrayList<>(Arrays.asList(first, second, onlyHistoryDish));
     }
 
     public static Restaurant getOneWithHistoryDish(){

@@ -2,7 +2,6 @@ package ru.topjava.repository;
 
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.utils.NotFoundException;
 
@@ -32,50 +31,47 @@ public class RestaurantRepository {
     }
 
     public Restaurant getOneWithCurrentDate(@Param("id") int id) {
-
-        List<Object[]> joinFromDb = em.createNativeQuery(
-                "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.ENABLE, D.NAME as dname, D.COST, D.DATE as ddate " +
-                        "FROM RESTAURANTS " +
-                        "LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID " +
-                        "WHERE D.DATE=:CURRENT_DATE " +
-                        "AND RESTAURANTS.ID =:id")
-                .setParameter("CURRENT_DATE", LocalDate.now())
-                .setParameter("id", id)
-                .getResultList();
-
-        if (joinFromDb.size() > 0) {
-            return restaurantMapper(joinFromDb).get(0);
+        Restaurant restaurant;
+        try {
+            restaurant = em.createQuery(
+                    "SELECT r " +
+                            "FROM Restaurant r " +
+                            "JOIN FETCH r.menu d " +
+                            "WHERE r.id=:id " +
+                            "AND d.date=:current_date", Restaurant.class)
+                    .setParameter("id", id)
+                    .setParameter("current_date", LocalDate.now())
+                    .getSingleResult();
+        } catch (javax.persistence.NoResultException e) {
+            throw new NotFoundException("Restaurant id: " + id + " not found in DB");
         }
-        throw new NotFoundException("Restaurant id: " + id + " not found in DB");
+        return restaurant;
     }
 
     public List<Restaurant> getTodayList() {
-        List<Object[]> joinFromDb = em.createNativeQuery(
-                "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.ENABLE, D.NAME as dname, D.COST, D.DATE as ddate " +
-                        "FROM RESTAURANTS " +
-                        "LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID " +
-                        "WHERE D.DATE=:CURRENT_DATE " +
-                        "AND RESTAURANTS.ENABLE = TRUE")
-                .setParameter("CURRENT_DATE", LocalDate.now()).getResultList();
 
-        return restaurantMapper(joinFromDb);
+        return em.createQuery(
+                "SELECT DISTINCT r " +
+                        "FROM Restaurant r " +
+                        "JOIN FETCH r.menu d " +
+                        "WHERE d.date=:current_date " +
+                        "AND r.enable=true ", Restaurant.class)
+                .setParameter("current_date", LocalDate.now())
+                .getResultList();
     }
 
     public List<Restaurant> getAllHistoryWithDish() {
-        List<Object[]> joinFromDb = em.createNativeQuery(
-                "SELECT RESTAURANTS.ID, RESTAURANTS.NAME, RESTAURANTS.ENABLE, D.NAME as dname, D.COST, D.DATE as ddate " +
-                        "FROM RESTAURANTS " +
-                        "LEFT JOIN DISHES D on RESTAURANTS.ID = D.RESTAURANT_ID")
+        return em.createQuery(
+                "SELECT r " +
+                        "FROM Restaurant r", Restaurant.class)
                 .getResultList();
-
-        return restaurantMapper(joinFromDb);
     }
 
-    public Restaurant getReference (int id){
+    public Restaurant getReference(int id) {
         return em.getReference(Restaurant.class, id);
     }
 
-    private List<Restaurant> restaurantMapper(List<Object[]> resultList) {
+    /*private List<Restaurant> restaurantMapper(List<Object[]> resultList) {
         Map<Integer, Restaurant> result = new HashMap<>();
         resultList.forEach((object -> {
             int restaurantId = (Integer) object[0];
@@ -90,5 +86,5 @@ public class RestaurantRepository {
             result.get(restaurantId).addDish(new Dish(dishName, dishCost, dishDate));
         }));
         return new ArrayList<>(result.values());
-    }
+    }*/
 }
