@@ -15,17 +15,14 @@ import java.util.List;
 public class RestaurantService {
 
     private final RestaurantRepository repository;
-    private final UserService userService;
 
 
-    public RestaurantService(RestaurantRepository repository, UserService userService) {
+    public RestaurantService(RestaurantRepository repository) {
         this.repository = repository;
-        this.userService = userService;
     }
 
     @Transactional
     public Restaurant create(Restaurant restaurant, User user) {
-        //User user = userService.getUser(userId);
         if (user.getRoles().contains(Role.ADMIN)) {
             return repository.save(restaurant);
         } else {
@@ -33,26 +30,25 @@ public class RestaurantService {
         }
     }
 
-    public Restaurant getOneWithTodayMenu(int id){
+    public Restaurant getOneWithTodayMenu(int id) {
         return repository.getOneWithCurrentDate(id);
     }
 
-    public Restaurant getOneWithHistoryMenu (int id){
+    public Restaurant getOneWithHistoryMenu(int id) {
         return repository.getOneWithHistoryDish(id);
     }
 
-    public List<Restaurant> getAllWithTodayMenu(){
+    public List<Restaurant> getAllWithTodayMenu() {
         return repository.getTodayList();
     }
 
-    public List<Restaurant> getAllWithHistoryMenu(){
+    public List<Restaurant> getAllWithHistoryMenu() {
         return repository.getAllHistoryWithDish();
     }
 
-    public Restaurant getReference (int id){
+    public Restaurant getReference(int id) {
         return repository.getReference(id);
     }
-
 
 
 }

@@ -9,11 +9,11 @@ import java.util.Objects;
 @Table(name = "votes")
 public class Vote extends AbstractBaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     Restaurant restaurant;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
 
@@ -21,13 +21,22 @@ public class Vote extends AbstractBaseEntity {
     LocalDateTime date;
 
     public Vote() {
-        setCurrentDateTime(null);
+        setCurrentDateTime();
     }
 
     public Vote(Restaurant restaurant, User user) {
+        this(null, restaurant, user);
+        /*
         this.restaurant = restaurant;
         this.user = user;
-        setCurrentDateTime(null);
+        setCurrentDateTime(null);*/
+    }
+
+    public Vote(Integer id, Restaurant restaurant, User user) {
+        super(id);
+        this.restaurant = restaurant;
+        this.user = user;
+        setCurrentDateTime();
     }
 
     public LocalDateTime getDate() {
@@ -54,10 +63,11 @@ public class Vote extends AbstractBaseEntity {
         this.user = user;
     }
 
-    private void setCurrentDateTime(LocalDateTime dateTime){
+    private void setCurrentDateTime(/*LocalDateTime dateTime*/) {
+        LocalDateTime dateTime = LocalDateTime.now();
         LocalDateTime localDateTime;
         localDateTime = Objects.requireNonNullElseGet(dateTime, LocalDateTime::now);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        date = LocalDateTime.parse(localDateTime.format(formatter), formatter);
+        date = LocalDateTime.parse(dateTime.format(formatter), formatter);
     }
 }

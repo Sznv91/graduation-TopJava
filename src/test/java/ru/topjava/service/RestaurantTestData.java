@@ -15,7 +15,7 @@ public class RestaurantTestData {
     public static final int RESTAURANT_ID = START_SEQ + 2;
 
     public static final Restaurant restaurantWithTodayMenu = new Restaurant(100002, "first restaurant", true, new Dish("first dish First restaurant", 1.01, LocalDate.now()), new Dish("second dish First restaurant", 2.1, LocalDate.now()));
-    private static final Restaurant anotherRestaurantWithTodayMenu = new Restaurant(100003, "second restaurant", true, new Dish("first dish Second restaurant", 1.02), new Dish("second dish Second restaurant", 2.2));
+    public static final Restaurant anotherRestaurantWithTodayMenu = new Restaurant(100003, "second restaurant", true, new Dish("first dish Second restaurant", 1.02), new Dish("second dish Second restaurant", 2.2));
     public static final List<Restaurant> allRestaurantWithTodayMenu = new ArrayList<>(Arrays.asList(restaurantWithTodayMenu, anotherRestaurantWithTodayMenu));
 
     public static List<Restaurant> getAllRestaurantWithHistoryDish() {
