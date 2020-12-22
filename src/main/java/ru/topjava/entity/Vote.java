@@ -39,6 +39,10 @@ public class Vote extends AbstractBaseEntity {
         setCurrentDateTime();
     }
 
+    public Vote (Vote vote){
+        this(vote.getId(), vote.getRestaurant(),vote.getUser());
+    }
+
     public LocalDateTime getDate() {
         return date;
     }

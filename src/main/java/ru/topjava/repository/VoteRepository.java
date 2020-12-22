@@ -27,7 +27,9 @@ public class VoteRepository {
     }
 
     public Vote create(Vote vote) {
-        return repository.save(vote);
+        return repository.save(new Vote(vote));
+
+//        return vote;
     }
 
     public int hasVoteToday(User user) {

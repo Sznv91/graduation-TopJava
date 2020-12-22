@@ -28,17 +28,22 @@ class VoteServiceTest {
 
     @Test
     void save() {
-        Restaurant restaurant = RestaurantTestData.restaurantWithTodayMenu;
-        User user = UserTestData.user;
-        Vote expect = new Vote(100005, restaurant, user);
+        Vote expect = VoteTestData.newVote;
         Vote actual = service.save(expect);
-        //Vote actual = service.get(expect.getId());
+        expect.setId(VoteTestData.newVoteId);
         assertEquals(VoteTo.getVoteTo(expect), VoteTo.getVoteTo(actual));
     }
 
     @Test
+    void isVoteToday() {
+        assertEquals(VoteTestData.EXIST_VOTE_ID, service.voteToday(UserTestData.admin));
+        assertEquals(VoteTestData.NOT_EXIST_VOTE_ID, service.voteToday(UserTestData.user));
+    }
+
+    @Test
     void update() {
-        Vote expect = new Vote(100005, RestaurantTestData.anotherRestaurantWithTodayMenu, UserTestData.user);
+        Vote expect =  VoteTestData.updatedVoteWithoutId;
+        expect.setId(VoteTestData.EXIST_VOTE_ID);
         LocalDateTime limiter = LocalDateTime.now().plusHours(1);
         Vote actual = service.saveWithCustomDateLimiter(expect, limiter);
         assertEquals(VoteTo.getVoteTo(expect), VoteTo.getVoteTo(actual));
@@ -47,10 +52,10 @@ class VoteServiceTest {
 
     @Test
     void updateWithoutVoteId() {
-        Vote expect = new Vote(RestaurantTestData.anotherRestaurantWithTodayMenu, UserTestData.user);
+        Vote expect = VoteTestData.updatedVoteWithoutId;
         LocalDateTime limiter = LocalDateTime.now().plusHours(1);
-        Vote actual = service.saveWithCustomDateLimiter(expect,limiter);
-        expect.setId(100005);
+        Vote actual = service.saveWithCustomDateLimiter(expect, limiter);
+        expect.setId(VoteTestData.EXIST_VOTE_ID);
         assertEquals(VoteTo.getVoteTo(expect), VoteTo.getVoteTo(actual));
     }
 

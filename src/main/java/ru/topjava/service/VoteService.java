@@ -28,6 +28,7 @@ public class VoteService {
         return saveWithCustomDateLimiter(vote, todayLimiter);
     }
 
+    @Transactional
     public Vote saveWithCustomDateLimiter(Vote vote, LocalDateTime todayLimiter) {
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         int voiceId = voteToday(vote.getUser());

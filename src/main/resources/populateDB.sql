@@ -30,4 +30,6 @@ VALUES (100002, 'first dish First restaurant', 1.01, current_date),
        (100004, 'Latest Dish Latest restaurant', 3.22, '2020-10-15');
 
 INSERT INTO VOTES (RESTAURANT_ID, USER_ID, DATE_TIME)
-VALUES ( 100002, 100001, CURRENT_TIMESTAMP() );
+VALUES ( 100002, 100001, CURRENT_TIMESTAMP() ),
+       ( 100002, 100000, '2020-11-10 09:08:07' );
+
