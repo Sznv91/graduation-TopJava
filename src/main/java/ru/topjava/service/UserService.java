@@ -3,8 +3,6 @@ package ru.topjava.service;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.topjava.entity.Restaurant;
-import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
 import ru.topjava.repository.UserRepository;
 

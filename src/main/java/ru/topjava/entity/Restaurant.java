@@ -1,9 +1,6 @@
 package ru.topjava.entity;
 
-import org.springframework.util.CollectionUtils;
-
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.*;
 
 @Entity

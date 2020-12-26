@@ -3,7 +3,6 @@ package ru.topjava.entity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 @Entity
 @Table(name = "votes")
@@ -26,10 +25,6 @@ public class Vote extends AbstractBaseEntity {
 
     public Vote(Restaurant restaurant, User user) {
         this(null, restaurant, user);
-        /*
-        this.restaurant = restaurant;
-        this.user = user;
-        setCurrentDateTime(null);*/
     }
 
     public Vote(Integer id, Restaurant restaurant, User user) {
@@ -67,10 +62,8 @@ public class Vote extends AbstractBaseEntity {
         this.user = user;
     }
 
-    private void setCurrentDateTime(/*LocalDateTime dateTime*/) {
+    private void setCurrentDateTime() {
         LocalDateTime dateTime = LocalDateTime.now();
-        LocalDateTime localDateTime;
-        localDateTime = Objects.requireNonNullElseGet(dateTime, LocalDateTime::now);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         date = LocalDateTime.parse(dateTime.format(formatter), formatter);
     }

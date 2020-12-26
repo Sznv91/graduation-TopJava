@@ -40,20 +40,6 @@ public class UserRepository {
         }
     }
 
-    /*public User update(User user, int id){
-        assert user.getId() != null;
-        if (user.isNew()){
-            if (user.getId().equals(id)){
-                return save(user);
-            } else {
-                throw new NotMatchException("User with id " + user.getId() + " not match with id " + id);
-            }
-        } else {
-            throw new NotFoundException("User with id " + user.getId() + " is new user. Can't update new user");
-        }
-
-    }*/
-
     public User update(User user) {
         Assert.notNull(user, "User must not be null");
         if (user.getId() != null) {
@@ -64,8 +50,7 @@ public class UserRepository {
     }
 
     public Boolean delete(int id) {
-        return repository.delete(id) != 0;//em.getReference(User.class,id));
-//        return true;
+        return repository.delete(id) != 0;
     }
 
     public User getReference (int id){

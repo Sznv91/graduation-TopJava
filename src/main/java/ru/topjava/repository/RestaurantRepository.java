@@ -71,20 +71,4 @@ public class RestaurantRepository {
         return em.getReference(Restaurant.class, id);
     }
 
-    /*private List<Restaurant> restaurantMapper(List<Object[]> resultList) {
-        Map<Integer, Restaurant> result = new HashMap<>();
-        resultList.forEach((object -> {
-            int restaurantId = (Integer) object[0];
-            String restaurantName = (String) object[1];
-            Boolean enable = (Boolean) object[2];
-
-            String dishName = (String) object[3];
-            double dishCost = Double.parseDouble(String.valueOf(object[4]));
-            LocalDate dishDate = ((java.sql.Date) object[5]).toLocalDate();
-
-            result.putIfAbsent(restaurantId, new Restaurant(restaurantId, restaurantName, enable));
-            result.get(restaurantId).addDish(new Dish(dishName, dishCost, dishDate));
-        }));
-        return new ArrayList<>(result.values());
-    }*/
 }

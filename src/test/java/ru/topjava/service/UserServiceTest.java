@@ -30,7 +30,6 @@ class UserServiceTest {
     void getById() {
         User actual = service.get(ADMIN_ID);
         assertEquals(getUserTo(admin), getUserTo(actual));
-
     }
 
     @Test
