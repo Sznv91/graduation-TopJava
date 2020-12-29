@@ -8,6 +8,7 @@ import ru.topjava.repository.VoteRepository;
 import ru.topjava.utils.LateToUpdate;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 
 @Service
@@ -22,7 +23,7 @@ public class VoteService {
 
     @Transactional
     public Vote save(Vote vote) {
-        LocalDateTime todayLimiter = LocalDateTime.now().withHour(11).withMinute(0).withSecond(0);
+        LocalDateTime todayLimiter = LocalDateTime.now().withHour(11).withMinute(0).withSecond(0).withNano(0);
         return saveWithCustomDateLimiter(vote, todayLimiter);
     }
 
@@ -33,7 +34,9 @@ public class VoteService {
             if (vote.getDate().isBefore(todayLimiter)) {
                 return repository.update(vote, voiceId);
             } else {
-                throw new LateToUpdate("too late for update");
+                throw new LateToUpdate("too late for update. Vote time: " + vote.getDate() +
+                        ". TodayLimiter is: " + todayLimiter +
+                        ". Restaurant id: " + vote.getRestaurant().getId());
             }
         } else {
             return repository.create(vote);
@@ -46,5 +49,9 @@ public class VoteService {
 
     public int voteToday(User user) {
         return repository.hasVoteToday(user);
+    }
+
+    public Map<Integer, Integer> getRestaurantsCount (LocalDateTime startDate, LocalDateTime endDate){
+        return repository.getVoteMap(startDate, endDate);
     }
 }

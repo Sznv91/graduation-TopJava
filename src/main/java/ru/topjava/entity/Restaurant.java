@@ -14,6 +14,9 @@ public class Restaurant extends AbstractNamedEntity {
     @Column(name = "ENABLE", nullable = false)
     private Boolean enable;
 
+    @Transient
+    private int voteCount;
+
     public void setMenu(Collection<Dish> menu) {
         this.menu = new ArrayList<>(List.copyOf(menu));
     }
@@ -62,5 +65,14 @@ public class Restaurant extends AbstractNamedEntity {
 
     public Restaurant(Restaurant restaurant) {
         this(restaurant.getId(), restaurant.getName(), restaurant.isEnable(), restaurant.getMenu().toArray(new Dish[0]));
+        voteCount = restaurant.getVoteCount();
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
     }
 }

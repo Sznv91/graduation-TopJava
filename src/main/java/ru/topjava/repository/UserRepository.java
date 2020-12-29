@@ -34,7 +34,7 @@ public class UserRepository {
 
     public User create(@NotNull User user) {
         if (user.isNew()) {
-            return save(user);
+            return new User(save(user));
         } else {
             throw new ExistException("User " + user.getId() + " already exist");
         }

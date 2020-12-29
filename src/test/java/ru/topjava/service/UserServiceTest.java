@@ -22,10 +22,6 @@ class UserServiceTest {
     @Autowired
     protected UserService service;
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
     void getById() {
         User actual = service.get(ADMIN_ID);
@@ -34,7 +30,7 @@ class UserServiceTest {
 
     @Test
     void create() {
-        User expected = getNew();//new User(null, "Test user", "test@ya.ru", "123321", Role.USER);
+        User expected = getNew();
         User actual = service.save(expected);
         expected.setId(actual.getId());
         assertNotNull(actual);
