@@ -54,10 +54,11 @@ public class VoteRepository {
     }
 
     public Map<Integer, Integer> getVoteMap(LocalDateTime startDate, LocalDateTime endDate) {
-        return em.createQuery("SELECT v.restaurant.id as restaurant_id, " +
+        return em.createQuery("SELECT (v.restaurant.id) as restaurant_id, " +
                 "count(v) as vote_count " +
                 "FROM Vote v " +
-                "WHERE v.date BETWEEN :start_date AND :end_date", Tuple.class)
+                "WHERE v.date BETWEEN :start_date AND :end_date " +
+                "GROUP BY (v.restaurant.id)", Tuple.class)
                 .setParameter("start_date", startDate)
                 .setParameter("end_date", endDate)
                 .getResultStream()

@@ -57,6 +57,16 @@ public class GuardController {
         return restaurantList;
     }
 
+    public List<Restaurant> getRestaurantsWithHistory() { //todo make test
+        List<Restaurant> restaurantList = restaurantService.getAllWithHistoryMenu();
+        LocalDateTime startDate = LocalDateTime.MIN;
+        LocalDateTime endDate = LocalDateTime.MAX;
+        Map<Integer, Integer> voteCount = voteService.getRestaurantsCount(startDate,endDate);
+        restaurantList.forEach(restaurant ->
+                restaurant.setVoteCount(voteCount.getOrDefault(restaurant.getId(), 0)));
+        return restaurantList;
+    }
+
     public Vote saveVote(int restaurantId, int userId) {
         Restaurant restaurant = restaurantService.getReference(restaurantId);
         User user = userService.get(userId);

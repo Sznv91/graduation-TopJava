@@ -100,6 +100,7 @@ class GuardControllerTest {
         newUser = controller.saveUser(newUser);
         controller.saveVote(actual.get(1).getId(), newUser.getId());
         actual = controller.getRestaurantsWithTodayMenu();
+        assertEquals(2, actual.get(0).getVoteCount());
         assertEquals(1, actual.get(1).getVoteCount());
 
     }
