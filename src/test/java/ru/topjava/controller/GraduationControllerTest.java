@@ -10,24 +10,30 @@ import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
 import ru.topjava.entity.Vote;
-import ru.topjava.service.RestaurantTestData;
 import ru.topjava.service.UserTestData;
 import ru.topjava.service.VoteTestData;
 import ru.topjava.to.RestaurantTo;
 import ru.topjava.to.UserTo;
 import ru.topjava.to.VoteTo;
+import ru.topjava.utils.PermissionException;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static ru.topjava.service.RestaurantTestData.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ru.topjava.service.RestaurantTestData.RESTAURANT_ID;
+import static ru.topjava.service.RestaurantTestData.getNew;
+import static ru.topjava.service.RestaurantTestData.getOneWithHistoryDish;
+import static ru.topjava.service.RestaurantTestData.restaurantWithTodayMenu;
 
 @SpringJUnitConfig(GraduationJpaConfig.class)
 @Sql(scripts = "classpath:populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-class GuardControllerTest {
+class GraduationControllerTest {
 
     @Autowired
-    private GuardController controller;
+    private GraduationController controller;
 
     @Test
     void saveUser() {
@@ -45,29 +51,35 @@ class GuardControllerTest {
     }
 
     @Test
-    void saveRestaurant() { //TODO add VOTE int test
+    void saveRestaurantByAdmin() {
         Restaurant expect = getNew();
         Restaurant actual = controller.saveRestaurant(expect, UserTestData.ADMIN_ID);
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
     }
 
     @Test
+    void saveRestaurantByUser() {
+        Restaurant expect = getNew();
+        assertThrows(PermissionException.class, () -> controller.saveRestaurant(expect, UserTestData.USER_ID));
+    }
+
+    @Test
     void getRestaurantWithTodayMenu() {
-        Restaurant actual = controller.getRestaurantWithTodayMenu(RESTAURANT_ID);
+        Restaurant actual = controller.getOneRestaurantWithTodayMenu(RESTAURANT_ID);
         assertEquals(RestaurantTo.getRestaurantTo(restaurantWithTodayMenu), RestaurantTo.getRestaurantTo(actual));
     }
 
     @Test
     void getRestaurantWithHistoryMenu() {
         Restaurant expect = getOneWithHistoryDish();
-        Restaurant actual = controller.getRestaurantWithHistoryMenu(100002); //TODO make constant RestaurantWithHistoryId
+        Restaurant actual = controller.getOneRestaurantWithHistoryMenu(RESTAURANT_ID);
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
     }
 
     @Test
     void saveVote() {
         Vote expect = VoteTestData.newVote;
-        Vote actual = controller.saveVote(100002, UserTestData.USER_ID); //TODO make constant RestaurantWithHistoryId
+        Vote actual = controller.saveVote(RESTAURANT_ID, UserTestData.USER_ID);
         expect.setId(VoteTestData.newVoteId);
         assertEquals(VoteTo.getVoteTo(expect), VoteTo.getVoteTo(actual));
     }
@@ -80,19 +92,19 @@ class GuardControllerTest {
 
     @Test
     void oneRestaurantVoteCounterToday() {
-        Restaurant restaurant = controller.getRestaurantWithTodayMenu(RESTAURANT_ID);
+        Restaurant restaurant = controller.getOneRestaurantWithTodayMenu(RESTAURANT_ID);
         assertEquals(1, restaurant.getVoteCount());
 
         controller.saveVote(RESTAURANT_ID, UserTestData.USER_ID);
-        restaurant = controller.getRestaurantWithTodayMenu(RESTAURANT_ID);
+        restaurant = controller.getOneRestaurantWithTodayMenu(RESTAURANT_ID);
         assertEquals(2, restaurant.getVoteCount());
     }
 
     @Test
-    void allRestaurantVoteCounterToday(){
+    void allRestaurantVoteCounterToday() {
         List<Restaurant> actual = controller.getRestaurantsWithTodayMenu();
         assertEquals(1, actual.get(0).getVoteCount());
-        controller.saveVote(actual.get(0).getId(),UserTestData.USER_ID);
+        controller.saveVote(actual.get(0).getId(), UserTestData.USER_ID);
         actual = controller.getRestaurantsWithTodayMenu();
         assertEquals(2, actual.get(0).getVoteCount());
         assertEquals(0, actual.get(1).getVoteCount());
@@ -106,7 +118,9 @@ class GuardControllerTest {
     }
 
     @Test
-    void VoteCounterHistory() { //Todo think about: better way to realize in VoteRepo
-
+    void allRestaurantVoteCounterHistory() {
+        List<Restaurant> actual = controller.getRestaurantsWithHistory();
+        System.out.println(actual.get(0).getId() + " Restaurant ID");
+        assertEquals(2, actual.get(0).getVoteCount());
     }
 }

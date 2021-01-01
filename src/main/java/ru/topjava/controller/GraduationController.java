@@ -8,19 +8,18 @@ import ru.topjava.service.RestaurantService;
 import ru.topjava.service.UserService;
 import ru.topjava.service.VoteService;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-public class GuardController {
+public class GraduationController {
 
     private final UserService userService;
     private final RestaurantService restaurantService;
     private final VoteService voteService;
 
-    public GuardController(UserService userService, RestaurantService restaurantService, VoteService voteService) {
+    public GraduationController(UserService userService, RestaurantService restaurantService, VoteService voteService) {
         this.userService = userService;
         this.restaurantService = restaurantService;
         this.voteService = voteService;
@@ -39,29 +38,28 @@ public class GuardController {
         return restaurantService.create(restaurant, user);
     }
 
-    public Restaurant getRestaurantWithTodayMenu(int restaurantId) {
+    public Restaurant getOneRestaurantWithTodayMenu(int restaurantId) {
         return restaurantService.getOneWithTodayMenu(restaurantId);
     }
 
-    public Restaurant getRestaurantWithHistoryMenu(int restaurantId) {
+    public Restaurant getOneRestaurantWithHistoryMenu(int restaurantId) {
         return restaurantService.getOneWithHistoryMenu(restaurantId);
     }
 
     public List<Restaurant> getRestaurantsWithTodayMenu() {
-        LocalDateTime startDate = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endDate = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999);
-        List<Restaurant> restaurantList = restaurantService.getAllWithTodayMenu();
-        Map<Integer, Integer> voteCount = voteService.getRestaurantsCount(startDate,endDate);
-        restaurantList.forEach(restaurant ->
-                restaurant.setVoteCount(voteCount.getOrDefault(restaurant.getId(), 0)));
-        return restaurantList;
+        return getRestaurants(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0),
+                LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999),
+                restaurantService.getAllWithTodayMenu());
     }
 
-    public List<Restaurant> getRestaurantsWithHistory() { //todo make test
-        List<Restaurant> restaurantList = restaurantService.getAllWithHistoryMenu();
-        LocalDateTime startDate = LocalDateTime.MIN;
-        LocalDateTime endDate = LocalDateTime.MAX;
-        Map<Integer, Integer> voteCount = voteService.getRestaurantsCount(startDate,endDate);
+    public List<Restaurant> getRestaurantsWithHistory() {
+        return getRestaurants(LocalDateTime.of(0, 1, 1,1,1)
+                , LocalDateTime.of(9999, 12,31,23,59)
+                , restaurantService.getAllWithHistoryMenu());
+    }
+
+    private List<Restaurant> getRestaurants(LocalDateTime startDate, LocalDateTime endDate, List<Restaurant> restaurantList) {
+        Map<Integer, Integer> voteCount = voteService.getRestaurantsCount(startDate, endDate);
         restaurantList.forEach(restaurant ->
                 restaurant.setVoteCount(voteCount.getOrDefault(restaurant.getId(), 0)));
         return restaurantList;
