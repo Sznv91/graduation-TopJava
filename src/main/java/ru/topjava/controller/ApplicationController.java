@@ -1,5 +1,6 @@
 package ru.topjava.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.User;
@@ -13,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class GraduationController {
+public class ApplicationController {
 
     private final UserService userService;
     private final RestaurantService restaurantService;
     private final VoteService voteService;
 
-    public GraduationController(UserService userService, RestaurantService restaurantService, VoteService voteService) {
+    public ApplicationController(UserService userService, RestaurantService restaurantService, VoteService voteService) {
         this.userService = userService;
         this.restaurantService = restaurantService;
         this.voteService = voteService;

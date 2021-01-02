@@ -5,8 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.topjava</groupId>
-    <artifactId>guard</artifactId>
+    <artifactId>graduation</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <dependencies>
         <!--Для класса Stat.java для работы ScriptRunner-->
@@ -34,6 +35,35 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>2.3.6.RELEASE</version>
         </dependency>
+
+        <!--Spring web mvc-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>5.2.12.RELEASE</version>
+        </dependency>
+
+        <!--        JSON-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+
+
+        <!--        Try resolve errors after add spring mvc-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!--<dependency>
             <groupId>org.hibernate</groupId>

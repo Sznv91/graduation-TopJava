@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -17,8 +16,8 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "ru.topjava.repository")
-@ComponentScan(value = {"ru.topjava.service", "ru.topjava.repository", "ru.topjava.controller"})
-@PropertySource("persistence-graduation.properties")
+@ComponentScan(value = {"ru.topjava.service", "ru.topjava.repository", "ru.topjava.controller"}) //"ru.topjava.web.controller"
+@PropertySource("classpath:persistence-graduation.properties")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class GraduationJpaConfig {

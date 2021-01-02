@@ -29,11 +29,11 @@ import static ru.topjava.service.RestaurantTestData.getOneWithHistoryDish;
 import static ru.topjava.service.RestaurantTestData.restaurantWithTodayMenu;
 
 @SpringJUnitConfig(GraduationJpaConfig.class)
-@Sql(scripts = "classpath:populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-class GraduationControllerTest {
+@Sql(scripts = {"classpath:initDB_H2.sql", "classpath:populateDB.sql"}, config = @SqlConfig(encoding = "UTF-8"))
+class ApplicationControllerTest {
 
     @Autowired
-    private GraduationController controller;
+    private ApplicationController controller;
 
     @Test
     void saveUser() {

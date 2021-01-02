@@ -5,7 +5,7 @@ import com.ibatis.common.resources.Resources;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.topjava.config.GraduationJpaConfig;
-import ru.topjava.controller.GraduationController;
+import ru.topjava.controller.ApplicationController;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.User;
 import ru.topjava.entity.Vote;
@@ -48,7 +48,7 @@ public class Start {
         System.out.println("UserID: " + admin.getId() + " " + voteRepository.hasVoteToday(admin) + " Have voice today");
 */
 
-        GraduationController controller = ctx.getBean(GraduationController.class);
+        ApplicationController controller = ctx.getBean(ApplicationController.class);
 
         User user = controller.getUser(100001);
         Restaurant restaurant = controller.getOneRestaurantWithTodayMenu(100003);
