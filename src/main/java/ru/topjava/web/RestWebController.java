@@ -1,5 +1,6 @@
 package ru.topjava.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,11 @@ import java.util.List;
 @RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestWebController extends ApplicationController {
 
-    public RestWebController(UserService userService, RestaurantService restaurantService, VoteService voteService) {
+    private final RestaurantCreatorUtil creatorUtil;
+
+    public RestWebController(UserService userService, RestaurantService restaurantService, VoteService voteService, RestaurantCreatorUtil creatorUtil) {
         super(userService, restaurantService, voteService);
+        this.creatorUtil = creatorUtil;
     }
 
     @GetMapping("/restaurants")
@@ -47,7 +51,7 @@ public class RestWebController extends ApplicationController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createRestaurantWithLocation(@RequestBody Restaurant restaurant) {
         Restaurant created =
-                super.saveRestaurant(RestaurantCreatorUtil.get(restaurant), SecurityUtil.authUserId());
+                super.saveRestaurant(creatorUtil.get(Restaurant.class, restaurant), SecurityUtil.authUserId());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/restaurants/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -64,10 +68,10 @@ public class RestWebController extends ApplicationController {
         SecurityUtil.setAuthUserId(userId);
     }
 
-    @RequestMapping("/users/create")
+    @RequestMapping("/user/create")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createUserWithLocation(@RequestBody User user) {
-        User created = super.saveUser(user);
+        User created = super.saveUser(creatorUtil.get(User.class, user));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/user/{id}")
                 .buildAndExpand(created.getId()).toUri();

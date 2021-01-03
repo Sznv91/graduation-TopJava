@@ -1,7 +1,8 @@
 # graduation-TopJava
 Actual version of graduation
-
-Format JSON for create Restaurant:
+Create Restaurant:
+Resource: /restaurants/create
+Format JSON:
 {
 "name":"String value", //Restaurant name
 "menu":[
@@ -46,7 +47,36 @@ Example:
       ],
 "enable":false      
 }
-
+Example 2:
+{
+"name":"New Restaurant"
+}
+Description:
+Creat object can only user with role "ADMIN".
 Restaurant can be creat without "menu" and flag "enable".
-Flag "enable" will be installed to "enable" automatically.
+Flag "enable" will be installed to "true" automatically.
 If the "id" field is defined in the JSON body, it will be ignored and the new object "Restaurant" will be assigned an ID from the DB.
+The field "name" are required.
+
+####################
+
+Create User:
+Resource: /user/create
+Format JSON:
+{
+   "name": "String value",
+   "email": "String value",
+   "password": "String value"
+}
+
+Example:
+
+{
+   "name": "John Connor",
+   "email": "test@examlpe.edu",
+   "password": "AnyPassword123"
+}
+
+Description: Resource creat users with role "USER". For create with role "Admin" use another resource.
+If the "id" field is defined in the JSON body, it will be ignored and the new object "User" will be assigned an ID from the DB.
+The fields "name", "email" and "password" are required.
