@@ -11,7 +11,7 @@ public class Restaurant extends AbstractNamedEntity {
     @CollectionTable(name = "dishes", joinColumns = @JoinColumn(name = "RESTAURANT_ID"))
     private List<Dish> menu;
 
-    @Column(name = "ENABLE", nullable = false)
+    @Column(name = "ENABLE")//, nullable = false)
     private Boolean enable;
 
     @Transient
