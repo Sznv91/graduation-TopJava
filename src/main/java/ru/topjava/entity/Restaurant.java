@@ -8,7 +8,7 @@ import java.util.*;
 public class Restaurant extends AbstractNamedEntity {
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "DISHES", joinColumns = @JoinColumn(name = "RESTAURANT_ID"))
+    @CollectionTable(name = "dishes", joinColumns = @JoinColumn(name = "RESTAURANT_ID"))
     private List<Dish> menu;
 
     @Column(name = "ENABLE", nullable = false)
