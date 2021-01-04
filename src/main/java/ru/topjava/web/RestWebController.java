@@ -2,7 +2,12 @@ package ru.topjava.web;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.controller.ApplicationController;
 import ru.topjava.entity.Restaurant;
@@ -37,11 +42,17 @@ public class RestWebController extends ApplicationController {
 
     @RequestMapping("/restaurants/{restaurantId}/update")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Restaurant updateRestaurant(@PathVariable int restaurantId, Restaurant restaurant){
-        if (restaurant.getId() != null && restaurant.getId().equals(restaurantId)){
-            creatorUtil.update(Restaurant.class, restaurant);
+    public ResponseEntity<Restaurant> updateRestaurantWithLocation(@PathVariable int restaurantId, @RequestBody Restaurant restaurant) {
+        Restaurant created;
+        if (restaurant.getId() != null && restaurant.getId().equals(restaurantId)) {
+            created = super.saveRestaurant(creatorUtil.update(Restaurant.class, restaurant), SecurityUtil.authUserId());
+        } else {
+            throw new UnsupportedOperationException("JSON body not correct");
         }
-        return null;
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/restaurants/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @GetMapping("/restaurants/history")

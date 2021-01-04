@@ -7,12 +7,9 @@ import ru.topjava.utils.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Repository
 public class RestaurantRepository {
@@ -64,19 +61,7 @@ public class RestaurantRepository {
     }
 
     public List<Restaurant> getTodayList() {
-        //https://vladmihalcea.com/jpa-query-map-result/
-       /* Map<Integer, Integer> voteCount = em.createQuery("SELECT v.restaurant.id as restaurant_id, " +
-                "count(v) as vote_count " +
-                "FROM Vote v " +
-                "WHERE v.date BETWEEN :start_day AND :end_day", Tuple.class)
-                .setParameter("start_day", LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0))
-                .setParameter("end_day", LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999))
-                .getResultStream()
-                .collect(Collectors.toMap(
-                        tuple -> ((Number) tuple.get("restaurant_id")).intValue(),
-                        tuple -> ((Number) tuple.get("vote_count")).intValue()));*/
-
-        List<Restaurant> restaurantList = em.createQuery(
+        return em.createQuery(
                 "SELECT DISTINCT r " +
                         "FROM Restaurant r " +
                         "JOIN FETCH r.menu d " +
@@ -84,11 +69,6 @@ public class RestaurantRepository {
                         "AND r.enable = true ", Restaurant.class)
                 .setParameter("current_date", LocalDate.now())
                 .getResultList();
-
-//        restaurantList.forEach(restaurant ->
-//                restaurant.setVoteCount(voteCount.getOrDefault(restaurant.getId(), 0)));
-
-        return restaurantList;
     }
 
     public List<Restaurant> getAllHistoryWithDish() {

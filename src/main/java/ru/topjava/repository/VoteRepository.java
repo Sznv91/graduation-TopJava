@@ -1,18 +1,15 @@
 package ru.topjava.repository;
 
 import org.springframework.stereotype.Repository;
-import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.User;
 import ru.topjava.entity.Vote;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
