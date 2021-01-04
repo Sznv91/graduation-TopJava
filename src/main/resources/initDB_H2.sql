@@ -11,7 +11,8 @@ CREATE TABLE users
     id integer default next value for GLOBAL_SEQ not null primary key,
     name             VARCHAR                           NOT NULL,
     email            VARCHAR                           NOT NULL,
-    password         VARCHAR                           NOT NULL
+    password         VARCHAR                           NOT NULL,
+    CONSTRAINT USER_UNIQUE_IDX UNIQUE (email)
 );
 
 CREATE TABLE user_roles

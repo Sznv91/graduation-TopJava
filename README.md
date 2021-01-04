@@ -79,4 +79,9 @@ Example:
 
 Description: Resource creat users with role "USER". For create with role "Admin" use another resource.
 If the "id" field is defined in the JSON body, it will be ignored and the new object "User" will be assigned an ID from the DB.
+The field "email" is unique.
 The fields "name", "email" and "password" are required.
+
+Knowledge problems:
+- Unhandled exeption:
+An error that occurs when saving two users with the same email address was not handled.

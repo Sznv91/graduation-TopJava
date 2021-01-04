@@ -1,6 +1,5 @@
 package ru.topjava.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +12,15 @@ import ru.topjava.service.UserService;
 import ru.topjava.service.VoteService;
 
 import java.net.URI;
-import java.security.PublicKey;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestWebController extends ApplicationController {
 
-    private final RestaurantCreatorUtil creatorUtil;
+    private final CreatorUtil creatorUtil;
 
-    public RestWebController(UserService userService, RestaurantService restaurantService, VoteService voteService, RestaurantCreatorUtil creatorUtil) {
+    public RestWebController(UserService userService, RestaurantService restaurantService, VoteService voteService, CreatorUtil creatorUtil) {
         super(userService, restaurantService, voteService);
         this.creatorUtil = creatorUtil;
     }
@@ -35,6 +33,15 @@ public class RestWebController extends ApplicationController {
     @GetMapping("/restaurants/{restaurantId}")
     public Restaurant getOneRestaurant(@PathVariable int restaurantId) {
         return super.getOneRestaurantWithTodayMenu(restaurantId);
+    }
+
+    @RequestMapping("/restaurants/{restaurantId}/update")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Restaurant updateRestaurant(@PathVariable int restaurantId, Restaurant restaurant){
+        if (restaurant.getId() != null && restaurant.getId().equals(restaurantId)){
+            creatorUtil.update(Restaurant.class, restaurant);
+        }
+        return null;
     }
 
     @GetMapping("/restaurants/history")
@@ -57,6 +64,8 @@ public class RestWebController extends ApplicationController {
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
+
+    //Todo make create dish list and add to Restaurant.
 
     @GetMapping("/user")
     public User getAuthUser() {
