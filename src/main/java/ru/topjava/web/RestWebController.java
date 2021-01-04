@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.controller.ApplicationController;
 import ru.topjava.entity.Restaurant;
+import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
 import ru.topjava.service.RestaurantService;
 import ru.topjava.service.UserService;
 import ru.topjava.service.VoteService;
+import ru.topjava.utils.PermissionException;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -96,6 +99,23 @@ public class RestWebController extends ApplicationController {
                 .path("/user/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
+    @RequestMapping("/user/create/admin")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> createAdminWithLocation(@RequestBody User admin){
+        User toCreated = creatorUtil.get(User.class, admin);
+        toCreated.setRoles(List.of(Role.ADMIN, Role.USER));
+        if (super.getUser(SecurityUtil.authUserId()).getRoles().contains(Role.ADMIN)){
+            User created = super.saveUser(toCreated);
+            URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/user/{id}")
+                    .buildAndExpand(created.getId()).toUri();
+            return ResponseEntity.created(uriOfNewResource).body(created);
+        } else {
+            throw new PermissionException("Haven't role Admin to create new user with role Admin");
+        }
+
     }
 
 }

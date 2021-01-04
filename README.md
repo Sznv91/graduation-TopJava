@@ -28,7 +28,14 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 Return single restaurant in JSON format from DB that have flag `"Enable":true` and dishes that are added today.
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant today.
 
-
+#Get single Restaurant with history menu:
+##Resource: 
+[/restaurants/history/{restaurantId}](http://localhost:8080/restaurants/history/{restaurantId})
+##Type
+>GET
+####Description:
+Return single restaurant in JSON format from DB that have any flag `"Enable"` and dishes of all date, or empty dish array if restaurant haven't dish.
+Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant of all date.
 
 #Create Restaurant:
 ##Resource: 
@@ -36,7 +43,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 ##Type:
 >POST
 ###Format JSON:
-```JSON
+```
 {
    "name": "String restaurant name",
    "menu":    [
@@ -99,7 +106,7 @@ The field "name" are required.
 ##Type:
 >POST
 ###Format JSON:
-```JSON
+```
 {
    "id": int value,
    "name": "String value",
@@ -136,6 +143,12 @@ The field "name" are required.
 Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
 Field "id" is required, another rule same as [Create Restaurant](README.md#Create Restaurant:) resource.
 
+#Delete Restaurant:
+#### Description:
+Technical specification do not suggest deleting the restaurant, but you can set the flag `"Enable":false` using resource [Update restaurant](README.MD#Update Restaurant:). 
+This will prevent display the restaurant when is called the resource [Restaurant List with today menu](README.MD#Get Restaurant list with today menu:).
+
+
 #Create User:
 ##Resource: 
 [/user/create](http://localhost:8080/user/create)
@@ -163,9 +176,19 @@ If the "id" field is defined in the JSON body, it will be ignored and the new ob
 The field "email" is unique.
 The fields "name", "email" and "password" are required.
 
+#Create Admin:
+##Resource: 
+[/user/create/admin](http://localhost:8080/user/create/admin)
+##Type:
+>POST
+####Description:
+Resource creat users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
+Remaining description does not differ from [Create User](README.MD#Create User:).
+
+
 #Knowledge problems:
 - Unhandled exception:
 An error that occurs when saving two users with the same email address was not handled.
 
 #Note
-Spring Security is not yet connected to the app. For change to admin role need go to resource [/user/test_change_user/{userId}](/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [admin resource]()
+Spring Security is not yet connected to the app. For change to admin role need go to resource [/user/test_change_user/{userId}](/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](Readme.MD#Create Admin:)
