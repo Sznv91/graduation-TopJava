@@ -100,7 +100,7 @@ Example 2:
 }
 ```
 ####Description:
-Creat object can only user with role "[ADMIN](README.MD#Note)".
+Creat object can only user with role "[ADMIN](./Readme.MD#Note)".
 Restaurant can be creat without "menu" and flag "enable".
 Flag "enable" will be installed to "true" automatically.
 If the "id" or date in menu fields defined in the JSON body, it will be ignored and the new object "Restaurant" will be assigned an ID from the DB, date dish in a menu was install to current date.
@@ -121,7 +121,7 @@ The field "name" are required.
       ]
 ```
 ####Description:
-Resource allows to add one or more dishes to restaurants. Resource available only users with [ADMIN](README.MD#Note) role.
+Resource allows to add one or more dishes to restaurants. Resource available only users with [ADMIN](./Readme.MD#Note) role.
 Added the dish will be had current date.
 
 #Vote for the restaurant
@@ -175,7 +175,7 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
 ```
 ####Description:
 Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
-Field "id" is required, another rule same as [Create Restaurant](README.md#Create Restaurant:) resource.
+Field "id" is required, another rule same as [Create Restaurant](./Readme.MD#Create Restaurant:) resource.
 
 #Delete Restaurant:
 #### Description:
@@ -217,7 +217,7 @@ The fields "name", "email" and "password" are required.
 >POST
 ####Description:
 Resource creat users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
-Remaining description does not differ from [Create User](README.MD#Create User:).
+Remaining description does not differ from [Create User](./Readme.MD#Create User:).
 
 
 #Knowledge problems:
@@ -227,4 +227,4 @@ An error that occurs when saving two users with the same email address was not h
 There is no possibility to manually manage transactions. Will be fixed in the future.
 
 #Note
-Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](Readme.MD#Create Admin:)
+Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](./Readme.MD#Create Admin:)
