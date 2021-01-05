@@ -178,12 +178,12 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
 ```
 #### Description:
 Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
-Field "id" is required, another rule same as [Create Restaurant](#Create Restaurant) resource.
+Field "id" is required, another rule same as [Create Restaurant](#Create-Restaurant) resource.
 
 # Delete Restaurant:
 #### Description:
-Technical specification do not suggest deleting the restaurant, but you can set the flag `"Enable":false` using resource [Update restaurant](#Update Restaurant). 
-This will prevent display the restaurant when is called the resource [Restaurant List with today menu](#Get Restaurant list with today menu).
+Technical specification do not suggest deleting the restaurant, but you can set the flag `"Enable":false` using resource [Update restaurant](#Update-Restaurant). 
+This will prevent display the restaurant when is called the resource [Restaurant List with today menu](#Get-Restaurant-list-with-today-menu).
 
 
 # Create User
@@ -215,14 +215,16 @@ The field "email" is unique.
 The fields "name", "email" and "password" are required.
 
 # Create Admin
-<a name="Create Admin"></a>
+
+<div id="Create-Admin"/>
+
 ## Resource: 
 [/user/create/admin](http://localhost:8080/user/create/admin)
 ## Type:
 >POST
 #### Description:
 Resource creat users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
-Remaining description does not differ from [Create User](#Create User).
+Remaining description does not differ from [Create User](#Create-User).
 
 
 # Knowledge problems:
@@ -233,4 +235,4 @@ There is no possibility to manually manage transactions. Will be fixed in the fu
 
 # Note
 <a name="Note"></a>
-Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](http://localhost:8080/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](#Create Admin)
+Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](http://localhost:8080/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](#Create-Admin)
