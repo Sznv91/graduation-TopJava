@@ -1,6 +1,23 @@
 # graduation-TopJava
 Actual version of graduation. Application use H2 DataBase (InMemory released) and start with some data in DB for demonstrate work.
-
+The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller 
+Structure of rest controller:  
+```
+\  
+|-restaurants\  
+|    |-create
+|    |-history\
+|    |    |-{id}    
+|    |-{id}
+|         |-update
+|         |-make_vote
+|         |-add_dishes
+|    
+|-user\
+     |-create
+          |-admin
+    
+```
 #Get Restaurant list with today menu:
 ##Resource: 
 [/restaurants](http://localhost:8080/restaurants)
@@ -52,13 +69,8 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
    "name": "String restaurant name",
    "menu":    [
             {
-         "cost": Double value,
-         "name": "String dish name",
-         "date":          [
-            int year,
-            int month,
-            int num of day
-         ]
+         "cost": Double dish cost,
+         "name": "String dish name"
       }
   ],
    "enable": boolean
@@ -71,21 +83,11 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
    "menu":    [
             {
          "cost": 1.01,
-         "name": "first dish",
-         "date":          [
-            2021,
-            1,
-            3
-         ]
+         "name": "first dish"
       },
             {
          "cost": 2.1,
-         "name": "second dish",
-         "date":          [
-            2021,
-            1,
-            3
-         ]
+         "name": "second dish"
       }
    ],
    "enable": true
@@ -101,7 +103,7 @@ Example 2:
 Creat object can only user with role "[ADMIN](README.MD#Note)".
 Restaurant can be creat without "menu" and flag "enable".
 Flag "enable" will be installed to "true" automatically.
-If the "id" field is defined in the JSON body, it will be ignored and the new object "Restaurant" will be assigned an ID from the DB.
+If the "id" or date in menu fields defined in the JSON body, it will be ignored and the new object "Restaurant" will be assigned an ID from the DB, date dish in a menu was install to current date.
 The field "name" are required.
 
 #Add Dishes:
@@ -114,20 +116,13 @@ The field "name" are required.
  [
                   {
             "cost": Double value,
-            "name": "String Dish name",
-            "date":             [
-               int year,
-               int month,
-               int number of day
-            ]
+            "name": "String Dish name"
          }
       ]
 ```
 ####Description:
 Resource allows to add one or more dishes to restaurants. Resource available only users with [ADMIN](README.MD#Note) role.
-You can add dish with any date. If you add dish with future date, 
-it will displayed in [Restaurants with today menu](README.MD#Get Restaurant list with today menu:) 
-on the day when the date is specified in JSON body.
+Added the dish will be had current date.
 
 #Vote for the restaurant
 ##Resource:
@@ -147,11 +142,11 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
 ###Format JSON:
 ```
 {
-   "id": int value,
-   "name": "String value",
+   "id": int restaurant id,
+   "name": "String restaurant name",
    "menu": [   {
-      "cost": Double value,
-      "name": "String value",
+      "cost": Double dish cost,
+      "name": "String dish name",
       "date":       [
          int year,
          int month,

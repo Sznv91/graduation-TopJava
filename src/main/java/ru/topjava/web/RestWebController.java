@@ -21,9 +21,7 @@ import ru.topjava.utils.PermissionException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -62,10 +60,10 @@ public class RestWebController extends ApplicationController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @RequestMapping("/restaurants/{restaurantId}/add_dish")
+    @RequestMapping("/restaurants/{restaurantId}/add_dishes")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> addDish(@PathVariable int restaurantId, @RequestBody List<Dish> dishes){
-        Restaurant created = super.addDishes(restaurantId, dishes, SecurityUtil.authUserId());
+    public ResponseEntity<Restaurant> addDishes(@PathVariable int restaurantId, @RequestBody List<Dish> dishes) {
+        Restaurant created = super.addDishes(restaurantId, creatorUtil.getDishList(dishes), SecurityUtil.authUserId());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/restaurants/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -73,7 +71,7 @@ public class RestWebController extends ApplicationController {
     }
 
     @RequestMapping("/restaurants/{restaurantId}/make_vote")
-    public void vote (@PathVariable int restaurantId, HttpServletResponse response) throws IOException {
+    public void vote(@PathVariable int restaurantId, HttpServletResponse response) throws IOException {
         super.saveVote(restaurantId, SecurityUtil.authUserId());
         response.sendRedirect("../");
     }
@@ -121,10 +119,10 @@ public class RestWebController extends ApplicationController {
 
     @RequestMapping("/user/create/admin")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createAdminWithLocation(@RequestBody User admin){
+    public ResponseEntity<User> createAdminWithLocation(@RequestBody User admin) {
         User toCreated = creatorUtil.get(User.class, admin);
         toCreated.setRoles(List.of(Role.ADMIN, Role.USER));
-        if (super.getUser(SecurityUtil.authUserId()).getRoles().contains(Role.ADMIN)){
+        if (super.getUser(SecurityUtil.authUserId()).getRoles().contains(Role.ADMIN)) {
             User created = super.saveUser(toCreated);
             URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/user/{id}")
