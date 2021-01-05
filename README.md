@@ -18,52 +18,52 @@ Structure of rest controller:
           |-admin
     
 ```
-#Get Restaurant list with today menu:
-##Resource: 
+# Get Restaurant list with today menu:
+## Resource: 
 [/restaurants](http://localhost:8080/restaurants)
-##Type
+## Type
 >GET
-####Description:
+#### Description:
 Return Array restaurants in JSON format from DB that have flag `"Enable":true` and dishes that are added today.
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant today.
 
-#Get Restaurant list with history menu:
-##Resource: 
+# Get Restaurant list with history menu:
+## Resource: 
 [/restaurants/history](http://localhost:8080/restaurants/history)
-##Type
+## Type
 >GET
-####Description:
+#### Description:
 Return Array restaurants in JSON format from DB that have any flag `"Enable"` and dishes of all date, and also Restaurants which do not have dish.
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant of all date.
 
-#Get single Restaurant with today menu:
-##Resource: 
+# Get single Restaurant with today menu:
+## Resource: 
 [/restaurants/{restaurantId}](http://localhost:8080/restaurants/{restaurantId})
 ___
 For demonstration, you can use for example {restaurantId} = 100002
-##Type
+## Type
 >GET
-####Description:
+#### Description:
 Return single restaurant in JSON format from DB that have flag `"Enable":true` and dishes that are added today.
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant today.
 
-#Get single Restaurant with history menu:
-##Resource: 
+# Get single Restaurant with history menu:
+## Resource: 
 [/restaurants/history/{restaurantId}](http://localhost:8080/restaurants/history/{restaurantId})
 ___
 For demonstration, you can use for example {restaurantId} = 100003. It has a dish with date 2020.10.20
-##Type
+## Type
 >GET
-####Description:
+#### Description:
 Return single restaurant in JSON format from DB that have any flag `"Enable"` and dishes of all date, or empty dish array if restaurant haven't dish.
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant of all date.
 
-#Create Restaurant:
-##Resource: 
+# Create Restaurant:
+## Resource: 
 [/restaurants/create](http://localhost:8080/restaurants/create)
-##Type:
+## Type:
 >POST
-###Format JSON:
+### Format JSON:
 ```
 {
    "name": "String restaurant name",
@@ -76,7 +76,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
    "enable": boolean
 }
 ```
-###Example:
+### Example:
 ```JSON
 {
    "name": "New restaurant",
@@ -99,19 +99,19 @@ Example 2:
    "name": "New Restaurant"
 }
 ```
-####Description:
-Creat object can only user with role "[ADMIN](./Readme.MD#Note)".
+#### Description:
+Creat object can only user with role "[ADMIN](#Note)".
 Restaurant can be creat without "menu" and flag "enable".
 Flag "enable" will be installed to "true" automatically.
 If the "id" or date in menu fields defined in the JSON body, it will be ignored and the new object "Restaurant" will be assigned an ID from the DB, date dish in a menu was install to current date.
 The field "name" are required.
 
-#Add Dishes:
-##Resource:
+# Add Dishes:
+## Resource:
 [/restaurants/{restaurantId}/add_dish](http://localhost:8080/restaurants/{restaurantId}/add_dish)
-##Type:
+## Type:
 >POST
-###Format JSON:
+### Format JSON:
 ```
  [
                   {
@@ -120,26 +120,26 @@ The field "name" are required.
          }
       ]
 ```
-####Description:
+#### Description:
 Resource allows to add one or more dishes to restaurants. Resource available only users with [ADMIN](./Readme.MD#Note) role.
 Added the dish will be had current date.
 
-#Vote for the restaurant
-##Resource:
+# Vote for the restaurant
+## Resource:
 [/restaurants/{restaurantId}/make_vote](http://localhost:8080/restaurants/{restaurantId}/make_vote)
-##Type:
+## Type:
 >GET
-####Description:
+#### Description:
 The resource allows to vote a single user for a restaurant. Voting can be made during the day. User can vote only for one restaurant.
 A second vote will update the vote for the other restaurant. Re-voting is only possible until 11am o'clock.
 For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number 26.
 
-#Update Restaurant:
-##Resource: 
+# Update Restaurant:
+## Resource: 
 [/restaurants/{restaurantId}/update](http://localhost:8080/restaurants/{restaurantId}/update)
-##Type:
+## Type:
 >POST
-###Format JSON:
+### Format JSON:
 ```
 {
    "id": int restaurant id,
@@ -156,7 +156,7 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
    "enable": boolean
 }
 ```
-###Example:
+### Example:
 ```JSON
 {
    "id": 100007,
@@ -173,22 +173,22 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
    "enable": true
 }
 ```
-####Description:
+#### Description:
 Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
 Field "id" is required, another rule same as [Create Restaurant](./Readme.MD#Create Restaurant:) resource.
 
-#Delete Restaurant:
+# Delete Restaurant:
 #### Description:
 Technical specification do not suggest deleting the restaurant, but you can set the flag `"Enable":false` using resource [Update restaurant](README.MD#Update Restaurant:). 
 This will prevent display the restaurant when is called the resource [Restaurant List with today menu](README.MD#Get Restaurant list with today menu:).
 
 
-#Create User:
-##Resource: 
+# Create User:
+## Resource: 
 [/user/create](http://localhost:8080/user/create)
-##Type:
+## Type:
 >POST
-###Format JSON:
+### Format JSON:
 ```JSON
 {
    "name": "String value",
@@ -196,7 +196,7 @@ This will prevent display the restaurant when is called the resource [Restaurant
    "password": "String value"
 }
 ```
-###Example:
+### Example:
 ```JSON
 {
    "name": "John Connor",
@@ -204,27 +204,28 @@ This will prevent display the restaurant when is called the resource [Restaurant
    "password": "AnyPassword123"
 }
 ```
-####Description: 
+#### Description: 
 Resource creat users with role "USER". For create with role "Admin" use another resource.
 If the "id" field is defined in the JSON body, it will be ignored and the new object "User" will be assigned an ID from the DB.
 The field "email" is unique.
 The fields "name", "email" and "password" are required.
 
-#Create Admin:
-##Resource: 
+# Create Admin:
+## Resource: 
 [/user/create/admin](http://localhost:8080/user/create/admin)
-##Type:
+## Type:
 >POST
-####Description:
+#### Description:
 Resource creat users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
 Remaining description does not differ from [Create User](./Readme.MD#Create User:).
 
 
-#Knowledge problems:
+# Knowledge problems:
 - Unhandled exception:
 An error that occurs when saving two users with the same email address was not handled.
 - Excessive hibernate access to the database. This is due to the use of spring data jpa. 
 There is no possibility to manually manage transactions. Will be fixed in the future.
 
-#Note
-Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](./Readme.MD#Create Admin:)
+# Note
+<a name="Note"></a>
+Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](#Create Admin:)
