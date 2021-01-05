@@ -1,6 +1,6 @@
 # graduation-TopJava
 Actual version of graduation. Application use H2 DataBase (InMemory released) and start with some data in DB for demonstrate work.
-The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller 
+The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller.  
 Structure of rest controller:  
 ```
 \  
@@ -93,7 +93,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
    "enable": true
 }
 ```
-Example 2:
+###Example 2:
 ```JSON
 {
    "name": "New Restaurant"
@@ -205,7 +205,7 @@ This will prevent display the restaurant when is called the resource [Restaurant
 }
 ```
 #### Description: 
-Resource creat users with role "USER". For create with role "Admin" use another resource.
+Resource creat users with role "USER". For create with role "Admin" use [another resource](#Create-Admin).
 If the "id" field is defined in the JSON body, it will be ignored and the new object "User" will be assigned an ID from the DB.
 The field "email" is unique.
 The fields "name", "email" and "password" are required.
@@ -216,7 +216,7 @@ The fields "name", "email" and "password" are required.
 ## Type:
 >POST
 #### Description:
-Resource creat users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
+Resource create users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
 Remaining description does not differ from [Create User](#Create-User).
 
 
