@@ -100,6 +100,28 @@ Flag "enable" will be installed to "true" automatically.
 If the "id" field is defined in the JSON body, it will be ignored and the new object "Restaurant" will be assigned an ID from the DB.
 The field "name" are required.
 
+#Add Dishes:
+##Resource:
+[/restaurants/{restaurantId}/add_dish](http://localhost:8080/restaurants/{restaurantId}/add_dish)
+##Type:
+>POST
+###Format JSON:
+```
+ [
+                  {
+            "cost": Double value,
+            "name": "String Dish name",
+            "date":             [
+               2021,
+               1,
+               5
+            ]
+         }
+      ]
+```
+####Description:
+Resource allows to add one or more dishes to restaurants. Resource available only users with [ADMIN](README.MD#Note) role.
+
 #Update Restaurant:
 ##Resource: 
 [/restaurants/{restaurantId}/update](http://localhost:8080/restaurants/{restaurantId}/update)

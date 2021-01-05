@@ -1,7 +1,7 @@
 package ru.topjava.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.User;
 import ru.topjava.entity.Vote;
@@ -39,6 +39,10 @@ public class ApplicationController {
         return restaurantService.create(restaurant, user);
     }
 
+    public Restaurant addDishes(int restaurantId, List<Dish> dishes, int userId) {
+        return restaurantService.addDish(restaurantId, dishes, userService.get(userId));
+    }
+
     public Restaurant getOneRestaurantWithTodayMenu(int restaurantId) {
         return restaurantService.getOneWithTodayMenu(restaurantId);
     }
@@ -54,8 +58,8 @@ public class ApplicationController {
     }
 
     public List<Restaurant> getRestaurantsWithHistory() {
-        return getRestaurants(LocalDateTime.of(0, 1, 1,1,1)
-                , LocalDateTime.of(9999, 12,31,23,59)
+        return getRestaurants(LocalDateTime.of(0, 1, 1, 1, 1)
+                , LocalDateTime.of(9999, 12, 31, 23, 59)
                 , restaurantService.getAllWithHistoryMenu());
     }
 

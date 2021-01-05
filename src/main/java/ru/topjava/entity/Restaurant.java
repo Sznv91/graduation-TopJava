@@ -26,10 +26,25 @@ public class Restaurant extends AbstractNamedEntity {
     }
 
     public void addDish(Dish dishes) {
+        checkNullMenu();
+        menu.add(dishes);
+    }
+    
+    public void addDish(List<Dish> dishes){
+        checkNullMenu();
+        menu.addAll(List.copyOf(dishes));
+    }
+
+    public void addDish(Dish... dishes){
+        checkNullMenu();
+        menu.addAll(List.copyOf(Arrays.asList(dishes)));
+
+    }
+    
+    private void checkNullMenu(){
         if (menu == null) {
             menu = new ArrayList<>();
         }
-        menu.add(dishes);
     }
 
     public void setEnable(boolean enable) {

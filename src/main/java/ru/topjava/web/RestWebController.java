@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.controller.ApplicationController;
+import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
@@ -18,6 +19,7 @@ import ru.topjava.service.UserService;
 import ru.topjava.service.VoteService;
 import ru.topjava.utils.PermissionException;
 
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
@@ -58,6 +60,17 @@ public class RestWebController extends ApplicationController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    //Todo make create dish list and add to Restaurant.
+    @RequestMapping("/restaurants/{restaurantId}/add_dish")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Restaurant> addDish(@PathVariable int restaurantId, @RequestBody List<Dish> dishes){
+        Restaurant created = super.addDishes(restaurantId, dishes, SecurityUtil.authUserId());
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/restaurants/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
     @GetMapping("/restaurants/history")
     public List<Restaurant> getAllRestaurantsWithHistoryDish() {
         return super.getRestaurantsWithHistory();
@@ -78,8 +91,6 @@ public class RestWebController extends ApplicationController {
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
-
-    //Todo make create dish list and add to Restaurant.
 
     @GetMapping("/user")
     public User getAuthUser() {

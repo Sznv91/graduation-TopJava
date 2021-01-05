@@ -2,12 +2,14 @@ package ru.topjava.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
 import ru.topjava.repository.RestaurantRepository;
 import ru.topjava.utils.PermissionException;
 
+import java.util.Dictionary;
 import java.util.List;
 
 @Service
@@ -48,6 +50,12 @@ public class RestaurantService {
 
     public Restaurant getReference(int id) {
         return repository.getReference(id);
+    }
+
+    public Restaurant addDish(int restaurantId, List<Dish> dishes, User user){
+        Restaurant restaurant = getOneWithHistoryMenu(restaurantId);
+        restaurant.addDish(dishes);
+        return create(restaurant, user);
     }
 
 
