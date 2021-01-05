@@ -19,7 +19,6 @@ Structure of rest controller:
     
 ```
 # Get Restaurant list with today menu
-<a name="Get Restaurant list with today menu"></a>
 ## Resource: 
 [/restaurants](http://localhost:8080/restaurants)
 ## Type
@@ -60,7 +59,6 @@ Return single restaurant in JSON format from DB that have any flag `"Enable"` an
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant of all date.
 
 # Create Restaurant
-<a name="Create Restaurant"></a>
 ## Resource: 
 [/restaurants/create](http://localhost:8080/restaurants/create)
 ## Type:
@@ -137,7 +135,6 @@ A second vote will update the vote for the other restaurant. Re-voting is only p
 For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number 26.
 
 # Update Restaurant
-<a name="Update Restaurant"></a>
 ## Resource: 
 [/restaurants/{restaurantId}/update](http://localhost:8080/restaurants/{restaurantId}/update)
 ## Type:
@@ -187,7 +184,6 @@ This will prevent display the restaurant when is called the resource [Restaurant
 
 
 # Create User
-<a name="Create User"></a>
 ## Resource: 
 [/user/create](http://localhost:8080/user/create)
 ## Type:
@@ -215,9 +211,6 @@ The field "email" is unique.
 The fields "name", "email" and "password" are required.
 
 # Create Admin
-
-<div id="Create-Admin"/>
-
 ## Resource: 
 [/user/create/admin](http://localhost:8080/user/create/admin)
 ## Type:
