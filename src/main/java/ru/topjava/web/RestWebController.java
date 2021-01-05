@@ -19,6 +19,8 @@ import ru.topjava.service.UserService;
 import ru.topjava.service.VoteService;
 import ru.topjava.utils.PermissionException;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.Collection;
@@ -60,7 +62,6 @@ public class RestWebController extends ApplicationController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    //Todo make create dish list and add to Restaurant.
     @RequestMapping("/restaurants/{restaurantId}/add_dish")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> addDish(@PathVariable int restaurantId, @RequestBody List<Dish> dishes){
@@ -69,6 +70,12 @@ public class RestWebController extends ApplicationController {
                 .path("/restaurants/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
+    @RequestMapping("/restaurants/{restaurantId}/make_vote")
+    public void vote (@PathVariable int restaurantId, HttpServletResponse response) throws IOException {
+        super.saveVote(restaurantId, SecurityUtil.authUserId());
+        response.sendRedirect("../");
     }
 
     @GetMapping("/restaurants/history")

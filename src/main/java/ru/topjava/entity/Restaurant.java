@@ -34,12 +34,6 @@ public class Restaurant extends AbstractNamedEntity {
         checkNullMenu();
         menu.addAll(List.copyOf(dishes));
     }
-
-    public void addDish(Dish... dishes){
-        checkNullMenu();
-        menu.addAll(List.copyOf(Arrays.asList(dishes)));
-
-    }
     
     private void checkNullMenu(){
         if (menu == null) {

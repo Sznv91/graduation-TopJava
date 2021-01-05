@@ -22,6 +22,8 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 #Get single Restaurant with today menu:
 ##Resource: 
 [/restaurants/{restaurantId}](http://localhost:8080/restaurants/{restaurantId})
+___
+For demonstration, you can use for example {restaurantId} = 100002
 ##Type
 >GET
 ####Description:
@@ -31,6 +33,8 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 #Get single Restaurant with history menu:
 ##Resource: 
 [/restaurants/history/{restaurantId}](http://localhost:8080/restaurants/history/{restaurantId})
+___
+For demonstration, you can use for example {restaurantId} = 100003. It has a dish with date 2020.10.20
 ##Type
 >GET
 ####Description:
@@ -112,15 +116,28 @@ The field "name" are required.
             "cost": Double value,
             "name": "String Dish name",
             "date":             [
-               2021,
-               1,
-               5
+               int year,
+               int month,
+               int number of day
             ]
          }
       ]
 ```
 ####Description:
 Resource allows to add one or more dishes to restaurants. Resource available only users with [ADMIN](README.MD#Note) role.
+You can add dish with any date. If you add dish with future date, 
+it will displayed in [Restaurants with today menu](README.MD#Get Restaurant list with today menu:) 
+on the day when the date is specified in JSON body.
+
+#Vote for the restaurant
+##Resource:
+[/restaurants/{restaurantId}/make_vote](http://localhost:8080/restaurants/{restaurantId}/make_vote)
+##Type:
+>GET
+####Description:
+The resource allows to vote a single user for a restaurant. Voting can be made during the day. User can vote only for one restaurant.
+A second vote will update the vote for the other restaurant. Re-voting is only possible until 11am o'clock.
+For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number 26.
 
 #Update Restaurant:
 ##Resource: 
@@ -211,6 +228,8 @@ Remaining description does not differ from [Create User](README.MD#Create User:)
 #Knowledge problems:
 - Unhandled exception:
 An error that occurs when saving two users with the same email address was not handled.
+- Excessive hibernate access to the database. This is due to the use of spring data jpa. 
+There is no possibility to manually manage transactions. Will be fixed in the future.
 
 #Note
-Spring Security is not yet connected to the app. For change to admin role need go to resource [/user/test_change_user/{userId}](/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](Readme.MD#Create Admin:)
+Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](Readme.MD#Create Admin:)
