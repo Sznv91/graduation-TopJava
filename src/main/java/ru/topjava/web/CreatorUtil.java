@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Component
 public class CreatorUtil {
 
-    @org.jetbrains.annotations.NotNull
     public <T> T get(Class<T> clazz, Object fromJson) {
 
         switch (clazz.getCanonicalName()) {

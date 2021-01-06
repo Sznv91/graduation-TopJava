@@ -1,21 +1,38 @@
 # graduation-TopJava
-Actual version of graduation. Application use H2 DataBase (InMemory released) and start with some data in DB for demonstrate work.
+An actual version of graduation. Application use H2 DataBase (InMemory released) and start with some data in DB for demonstrate work.
 The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller.  
-Structure of rest controller:  
+
+#The structure of the document:  
+* [Restaurants with today menu](#Get-Restaurant-list-with-today-menu)
+* [Restaurants with history menu](#Get-Restaurant-list-with-history-menu:)
+* [Single restaurant with today menu](#Get-single-Restaurant-with-today-menu:)
+* [Single restaurant with history menu](#Get-single-Restaurant-with-history-menu:)
+* [Create Restaurant](#Create-Restaurant)
+* [Delete Restaurant](#Delete-Restaurant:)
+* [Add Dishes](#Add-Dishes:)
+* [Vote for a restaurant](#Vote-for-the-restaurant)
+* [Update Restaurant](#Update-Restaurant)
+* [Create regular User](#Create-User)
+* [Create admin User](#Create-Admin)
+* [Known issues](#Known-issues:)
+* [Note](#Note)
+___  
+
+#Structure of rest controller:  
 ```
 \  
 |-restaurants\  
-|    |-create
-|    |-history\
-|    |    |-{id}    
-|    |-{id}
-|         |-update
-|         |-make_vote
-|         |-add_dishes
+|            |-create
+|            |-history\
+|            |        |-{id}    
+|            |-{id}\
+|                  |-update
+|                  |-make_vote
+|                  |-add_dishes
 |    
 |-user\
-     |-create
-          |-admin
+      |-create
+      |-admin
     
 ```
 # Get Restaurant list with today menu
@@ -220,12 +237,12 @@ Resource create users with role "USER" and "ADMIN". Important: only user with ro
 Remaining description does not differ from [Create User](#Create-User).
 
 
-# Knowledge problems:
+# Known issues:
 - Unhandled exception:
 An error that occurs when saving two users with the same email address was not handled.
 - Excessive hibernate access to the database. This is due to the use of spring data jpa. 
 There is no possibility to manually manage transactions. Will be fixed in the future.
+- Hibernate cache not yet connected. Will be fixed in the future.
 
 # Note
-<a name="Note"></a>
 Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](http://localhost:8080/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](#Create-Admin)

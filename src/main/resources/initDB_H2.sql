@@ -12,7 +12,7 @@ CREATE TABLE users
     name             VARCHAR                           NOT NULL,
     email            VARCHAR                           NOT NULL,
     password         VARCHAR                           NOT NULL,
-    CONSTRAINT USER_UNIQUE_IDX UNIQUE (email)
+    CONSTRAINT user_unique_constraint UNIQUE (email)
 );
 
 CREATE TABLE user_roles
@@ -28,30 +28,25 @@ CREATE TABLE restaurants
     id integer default next value for GLOBAL_SEQ not null primary key,
     name             VARCHAR                           NOT NULL,
     enable           BOOLEAN    DEFAULT TRUE           NOT NULL
---     date             DATE DEFAULT CURRENT_DATE         NOT NULL,
 );
 
 CREATE TABLE dishes
 (
-    restaurant_id    INTEGER                           ,
+    restaurant_id    INTEGER                           NOT NULL,
     name             VARCHAR                           NOT NULL,
     cost             DOUBLE                            NOT NULL,
-    date             DATE DEFAULT CURRENT_DATE         /*NOT NULL*/,
-    /*CONSTRAINT DISHES_RESTAURANTS_ID_fk UNIQUE (restaurant_id,name),
-    FOREIGN KEY (restaurant_id) REFERENCES restaurants (id)
-                                          ON DELETE CASCADE*/
+    date             DATE DEFAULT CURRENT_DATE         NOT NULL,
+    CONSTRAINT DISHES_RESTAURANTS_ID_fk UNIQUE (restaurant_id, name, date),
     FOREIGN KEY (restaurant_id) REFERENCES RESTAURANTS(id) ON DELETE CASCADE
 );
 
 CREATE TABLE votes
 (
     id integer default next value for GLOBAL_SEQ not null primary key,
-    restaurant_id   INTEGER                           ,
-    user_id         INTEGER                             ,
-    date_time             TIMESTAMP DEFAULT CURRENT_TIMESTAMP()         /*NOT NULL*/,
-    /*CONSTRAINT DISHES_RESTAURANTS_ID_fk UNIQUE (restaurant_id,name),
-    FOREIGN KEY (restaurant_id) REFERENCES restaurants (id)
-                                          ON DELETE CASCADE*/
+    restaurant_id   INTEGER                            NOT NULL,
+    user_id         INTEGER                            NOT NULL,
+    date_time       TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
     FOREIGN KEY (restaurant_id) REFERENCES RESTAURANTS(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id)       REFERENCES USERS(id)       ON DELETE CASCADE
 );
+CREATE INDEX restaurant_id_date_time ON VOTES (restaurant_id, date_time);
