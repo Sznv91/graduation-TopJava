@@ -4,17 +4,17 @@ The "soapUi_project" directory contains the SoapUI project file for demonstratin
 
 #The structure of the document:  
 * [Restaurants with today menu](#Get-Restaurant-list-with-today-menu)
-* [Restaurants with history menu](#Get-Restaurant-list-with-history-menu:)
-* [Single restaurant with today menu](#Get-single-Restaurant-with-today-menu:)
-* [Single restaurant with history menu](#Get-single-Restaurant-with-history-menu:)
+* [Restaurants with history menu](#Get-Restaurant-list-with-history-menu)
+* [Single restaurant with today menu](#Get-single-Restaurant-with-today-menu)
+* [Single restaurant with history menu](#Get-single-Restaurant-with-history-menu)
 * [Create Restaurant](#Create-Restaurant)
-* [Delete Restaurant](#Delete-Restaurant:)
-* [Add Dishes](#Add-Dishes:)
+* [Delete Restaurant](#Delete-Restaurant)
+* [Add Dishes](#Add-Dishes)
 * [Vote for a restaurant](#Vote-for-the-restaurant)
 * [Update Restaurant](#Update-Restaurant)
 * [Create regular User](#Create-User)
 * [Create admin User](#Create-Admin)
-* [Known issues](#Known-issues:)
+* [Known issues](#Known-issues)
 * [Note](#Note)
 ___  
 
@@ -44,7 +44,7 @@ ___
 Return Array restaurants in JSON format from DB that have flag `"Enable":true` and dishes that are added today.
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant today.
 
-# Get Restaurant list with history menu:
+# Get Restaurant list with history menu
 ## Resource: 
 [/restaurants/history](http://localhost:8080/restaurants/history)
 ## Type
@@ -53,7 +53,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 Return Array restaurants in JSON format from DB that have any flag `"Enable"` and dishes of all date, and also Restaurants which do not have dish.
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant of all date.
 
-# Get single Restaurant with today menu:
+# Get single Restaurant with today menu
 ## Resource: 
 [/restaurants/{restaurantId}](http://localhost:8080/restaurants/{restaurantId})
 ___
@@ -64,7 +64,7 @@ For demonstration, you can use for example {restaurantId} = 100002
 Return single restaurant in JSON format from DB that have flag `"Enable":true` and dishes that are added today.
 Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant today.
 
-# Get single Restaurant with history menu:
+# Get single Restaurant with history menu
 ## Resource: 
 [/restaurants/history/{restaurantId}](http://localhost:8080/restaurants/history/{restaurantId})
 ___
@@ -123,7 +123,7 @@ Flag "enable" will be installed to "true" automatically.
 If the "id" or date in menu fields defined in the JSON body, it will be ignored and the new object "Restaurant" will be assigned an ID from the DB, date dish in a menu was install to current date.
 The field "name" are required.
 
-# Add Dishes:
+# Add Dishes
 ## Resource:
 [/restaurants/{restaurantId}/add_dish](http://localhost:8080/restaurants/{restaurantId}/add_dish)
 ## Type:
@@ -194,7 +194,7 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
 Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
 Field "id" is required, another rule same as [Create Restaurant](#Create-Restaurant) resource.
 
-# Delete Restaurant:
+# Delete Restaurant
 #### Description:
 Technical specification do not suggest deleting the restaurant, but you can set the flag `"Enable":false` using resource [Update restaurant](#Update-Restaurant). 
 This will prevent display the restaurant when is called the resource [Restaurant List with today menu](#Get-Restaurant-list-with-today-menu).
@@ -237,7 +237,7 @@ Resource create users with role "USER" and "ADMIN". Important: only user with ro
 Remaining description does not differ from [Create User](#Create-User).
 
 
-# Known issues:
+# Known issues
 - Unhandled exception:
 An error that occurs when saving two users with the same email address was not handled.
 - Excessive hibernate access to the database. This is due to the use of spring data jpa. 
