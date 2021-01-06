@@ -1,10 +1,6 @@
 package ru.topjava.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -25,6 +21,7 @@ import java.util.Properties;
 @PropertySource("classpath:persistence-graduation.properties")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
+@ImportResource("classpath:spring-security.xml")
 public class GraduationJpaConfig {
 
     private final Environment env;
