@@ -4,13 +4,13 @@ package ru.topjava.web;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import ru.topjava.AuthorizedUser;
-import ru.topjava.entity.AbstractBaseEntity;
 
 import static java.util.Objects.requireNonNull;
 
 public class SecurityUtil {
 
-//    private static int id = AbstractBaseEntity.START_SEQ;
+    private SecurityUtil() {
+    }
 
     public static AuthorizedUser safeGet() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -21,9 +21,6 @@ public class SecurityUtil {
         return (principal instanceof AuthorizedUser) ? (AuthorizedUser) principal : null;
     }
 
-    private SecurityUtil() {
-    }
-
     public static AuthorizedUser get() {
         return requireNonNull(safeGet(), "No authorized user found");
     }
@@ -32,12 +29,4 @@ public class SecurityUtil {
         return get().getUserTo().getId();
     }
 
-    /*public static int authUserId() {
-        return id;
-    }
-
-    public static void setAuthUserId(int id) {
-        SecurityUtil.id = id;
-    }
-*/
 }

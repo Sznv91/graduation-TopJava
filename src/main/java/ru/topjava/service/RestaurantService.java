@@ -5,11 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.Role;
-import ru.topjava.entity.User;
 import ru.topjava.repository.RestaurantRepository;
+import ru.topjava.to.UserTo;
 import ru.topjava.utils.PermissionException;
 
-import java.util.Dictionary;
 import java.util.List;
 
 @Service
@@ -24,11 +23,11 @@ public class RestaurantService {
     }
 
     @Transactional
-    public Restaurant create(Restaurant restaurant, User user) {
-        if (user.getRoles().contains(Role.ADMIN)) {
+    public Restaurant create(Restaurant restaurant, UserTo admin) {
+        if (admin.getRoles().contains(Role.ADMIN)) {
             return repository.save(restaurant);
         } else {
-            throw new PermissionException("User id: " + user.getId() + "haven't role ADMIN");
+            throw new PermissionException("User id: " + admin.getId() + "haven't role ADMIN");
         }
     }
 
@@ -52,10 +51,10 @@ public class RestaurantService {
         return repository.getReference(id);
     }
 
-    public Restaurant addDish(int restaurantId, List<Dish> dishes, User user){
+    public Restaurant addDish(int restaurantId, List<Dish> dishes, UserTo admin) {
         Restaurant restaurant = getOneWithHistoryMenu(restaurantId);
         restaurant.addDish(dishes);
-        return create(restaurant, user);
+        return create(restaurant, admin);
     }
 
 

@@ -3,14 +3,10 @@ package ru.topjava.to;
 import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
 
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
-public class UserTo implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class UserTo {
 
     private final Integer id;
     private final String name;
@@ -34,11 +30,15 @@ public class UserTo implements Serializable {
         return id;
     }
 
-    public String getPassword(){
-        return password;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public String getEmail(){
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
         return email;
     }
 

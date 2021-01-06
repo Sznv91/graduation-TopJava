@@ -8,6 +8,7 @@ import ru.topjava.entity.Vote;
 import ru.topjava.service.RestaurantService;
 import ru.topjava.service.UserService;
 import ru.topjava.service.VoteService;
+import ru.topjava.to.UserTo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,13 +35,12 @@ public class ApplicationController {
         return userService.get(id);
     }
 
-    public Restaurant saveRestaurant(Restaurant restaurant, int userId) {
-        User user = userService.get(userId);
-        return restaurantService.create(restaurant, user);
+    public Restaurant saveRestaurant(Restaurant restaurant, UserTo admin) {
+        return restaurantService.create(restaurant, admin);
     }
 
-    public Restaurant addDishes(int restaurantId, List<Dish> dishes, int userId) {
-        return restaurantService.addDish(restaurantId, dishes, userService.get(userId));
+    public Restaurant addDishes(int restaurantId, List<Dish> dishes, UserTo admin) {
+        return restaurantService.addDish(restaurantId, dishes, admin);
     }
 
     public Restaurant getOneRestaurantWithTodayMenu(int restaurantId) {
