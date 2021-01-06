@@ -16,26 +16,21 @@ import static ru.topjava.service.UserTestData.*;
 import static ru.topjava.to.UserTo.getUserTo;
 
 @SpringJUnitConfig(GraduationJpaConfig.class)
-@Sql(scripts = "classpath:populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+@Sql(scripts = {"classpath:initDB_H2.sql", "classpath:populateDB.sql"}, config = @SqlConfig(encoding = "UTF-8"))
 class UserServiceTest {
 
     @Autowired
     protected UserService service;
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
     void getById() {
-        User actual = service.getUser(ADMIN_ID);
+        User actual = service.get(ADMIN_ID);
         assertEquals(getUserTo(admin), getUserTo(actual));
-
     }
 
     @Test
     void create() {
-        User expected = getNew();//new User(null, "Test user", "test@ya.ru", "123321", Role.USER);
+        User expected = getNew();
         User actual = service.save(expected);
         expected.setId(actual.getId());
         assertNotNull(actual);
@@ -50,7 +45,7 @@ class UserServiceTest {
     @Test
     void Update() {
         User actual = service.update(getUpdated());
-        User expected = service.getUser(USER_ID);
+        User expected = service.get(USER_ID);
         assertEquals(getUserTo(expected), getUserTo(actual));
     }
 

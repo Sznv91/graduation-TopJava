@@ -1,9 +1,8 @@
 package ru.topjava.service;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.topjava.entity.Restaurant;
-import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
 import ru.topjava.repository.UserRepository;
 
@@ -19,7 +18,7 @@ public class UserService {
         this.repository = repository;
     }
 
-    public User getUser(int id) {
+    public User get(int id) {
         return repository.getById(id);
     }
 
@@ -33,16 +32,12 @@ public class UserService {
         return repository.update(user);
     }
 
+    @Modifying
     public Boolean delete(int id){
         return repository.delete(id);
     }
 
-    public Restaurant addRestaurant(User user, Restaurant restaurant) {
-        if (user.getRoles().equals(Role.ADMIN)) {
-
-        } else {
-            throw new RuntimeException();
-        }
-        return null;
+    public User getReference (int id){
+        return repository.getReference(id);
     }
 }

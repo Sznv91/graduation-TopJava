@@ -13,10 +13,10 @@ VALUES ('USER', 100000),
        ('USER', 100001),
        ('ADMIN', 100001);
 
-INSERT INTO RESTAURANTS (NAME/*,DATE*/)
-VALUES ('first restaurant'/*, CURRENT_DATE*/),
-       ('second restaurant'/*, CURRENT_DATE*/),
-       ('Latest restaurant'/*, '2020-10-20'*/);
+INSERT INTO RESTAURANTS (NAME)
+VALUES ('first restaurant'),
+       ('second restaurant'),
+       ('Latest restaurant');
 
 INSERT INTO DISHES(RESTAURANT_ID, NAME, COST, DATE)
 VALUES (100002, 'first dish First restaurant', 1.01, current_date),
@@ -28,3 +28,8 @@ VALUES (100002, 'first dish First restaurant', 1.01, current_date),
        (100004, 'first Dish Latest restaurant', 3.22, '2020-10-20'),
        (100004, 'second Dish Latest restaurant', 3.22, '2020-10-20'),
        (100004, 'Latest Dish Latest restaurant', 3.22, '2020-10-15');
+
+INSERT INTO VOTES (RESTAURANT_ID, USER_ID, DATE_TIME)
+VALUES ( 100002, 100001, CURRENT_TIMESTAMP() ),
+       ( 100002, 100000, '2020-11-10 09:08:07' );
+

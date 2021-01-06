@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.topjava.service.RestaurantTestData.*;
 
 @SpringJUnitConfig(GraduationJpaConfig.class)
-@Sql(scripts = "classpath:populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+@Sql(scripts = {"classpath:initDB_H2.sql", "classpath:populateDB.sql"}, config = @SqlConfig(encoding = "UTF-8"))
 class RestaurantServiceTest {
 
     @Autowired
@@ -28,20 +28,20 @@ class RestaurantServiceTest {
     @Test
     void createByAdmin() {
         Restaurant expect = getNew();
-        Restaurant actual = service.create(expect, UserTestData.ADMIN_ID);
+        Restaurant actual = service.create(expect, UserTestData.admin);
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
     }
 
     @Test
     void createByUser() {
-        assertThrows(PermissionException.class, () -> service.create(getNew(), UserTestData.USER_ID));
+        assertThrows(PermissionException.class, () -> service.create(getNew(), UserTestData.user));
     }
 
     @Test
     void setDisable(){
         Restaurant expect = service.getOneWithHistoryMenu(RESTAURANT_ID);
         expect.setEnable(false);
-        Restaurant actual = service.create(expect, UserTestData.ADMIN_ID);
+        Restaurant actual = service.create(expect, UserTestData.admin);
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
 
     }
