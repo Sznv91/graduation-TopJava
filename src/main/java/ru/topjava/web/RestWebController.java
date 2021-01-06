@@ -102,10 +102,10 @@ public class RestWebController extends ApplicationController {
         return super.getUser(SecurityUtil.authUserId());
     }
 
-    @GetMapping("/user/test_change_user/{userId}")
+    /*@GetMapping("/user/test_change_user/{userId}")
     public void changeUser(@PathVariable int userId) {
         SecurityUtil.setAuthUserId(userId);
-    }
+    }*/
 
     @RequestMapping("/user/create")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

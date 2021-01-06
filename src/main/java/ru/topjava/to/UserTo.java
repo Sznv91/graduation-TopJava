@@ -40,4 +40,8 @@ public class UserTo {
     public int hashCode() {
         return Objects.hash(id, name, password, roles);
     }
+
+    public int id() {
+        return id;
+    }
 }
