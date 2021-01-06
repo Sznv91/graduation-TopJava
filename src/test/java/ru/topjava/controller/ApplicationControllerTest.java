@@ -53,14 +53,14 @@ class ApplicationControllerTest {
     @Test
     void saveRestaurantByAdmin() {
         Restaurant expect = getNew();
-        Restaurant actual = controller.saveRestaurant(expect, UserTestData.ADMIN_ID);
+        Restaurant actual = controller.saveRestaurant(expect, UserTo.getUserTo(UserTestData.admin));
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
     }
 
     @Test
     void saveRestaurantByUser() {
         Restaurant expect = getNew();
-        assertThrows(PermissionException.class, () -> controller.saveRestaurant(expect, UserTestData.USER_ID));
+        assertThrows(PermissionException.class, () -> controller.saveRestaurant(expect, UserTo.getUserTo(UserTestData.user)));
     }
 
     @Test

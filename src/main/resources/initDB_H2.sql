@@ -14,6 +14,7 @@ CREATE TABLE users
     password         VARCHAR                           NOT NULL,
     CONSTRAINT user_unique_constraint UNIQUE (email)
 );
+CREATE INDEX email_password_idx ON users (email, password);
 
 CREATE TABLE user_roles
 (

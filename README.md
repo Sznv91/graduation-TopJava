@@ -193,7 +193,7 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
 }
 ```
 #### Description:
-Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
+Resource available only users with [ADMIN](#Note) role. Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
 Field "id" is required, another rule same as [Create Restaurant](#Create-Restaurant) resource.
 
 # Delete Restaurant
@@ -202,7 +202,7 @@ Technical specification do not suggest deleting the restaurant, but you can set 
 This will prevent display the restaurant when is called the resource [Restaurant List with today menu](#Get-Restaurant-list-with-today-menu).
 
 
-# Create User
+# Create Regular User
 ## Resource: 
 [/user/create](http://localhost:8080/user/create)
 ## Type:
@@ -224,7 +224,7 @@ This will prevent display the restaurant when is called the resource [Restaurant
 }
 ```
 #### Description: 
-Resource creat users with role "USER". For create with role "Admin" use [another resource](#Create-Admin).
+Resource available not authorized users. Resource creat users with role "USER". For create with role "Admin" use [another resource](#Create-Admin).
 If the "id" field is defined in the JSON body, it will be ignored and the new object "User" will be assigned an ID from the DB.
 The field "email" is unique.
 The fields "name", "email" and "password" are required.
@@ -245,6 +245,15 @@ An error that occurs when saving two users with the same email address was not h
 - Excessive hibernate access to the database. This is due to the use of spring data jpa. 
 There is no possibility to manually manage transactions. Will be fixed in the future.
 - Hibernate cache not yet connected. Will be fixed in the future.
+- Not yet implemented test methods for REST controller and Spring Security. But their work is demonstrated in the SoapUi project. 
+In the future, it is planned to release JUnit tests.
 
 # Note
-Spring Security is not yet connected to the app. For change to other user or admin role need go to resource [/user/test_change_user/{userId}](http://localhost:8080/user/test_change_user/{userId}) where userId is 100001 or admin created with resource [Create Admin](#Create-Admin)
+Spring Security is connected to the project. With start application two users are automatically created.  
+`USER:`
+> user@yandex.ru | password
+
+`ADMIN:`
+> admin@gmail.com | admin
+
+Thank you for your time.

@@ -22,6 +22,10 @@ public class UserRepository {
         this.repository = repository;
     }
 
+    public User getByEmail(String email) {
+        return em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult();
+    }
+
     public User getById(int id) {
         User result = repository.findById(id).orElse(null);//getById(id);
         if (result != null) {
@@ -53,7 +57,7 @@ public class UserRepository {
         return repository.delete(id) != 0;
     }
 
-    public User getReference (int id){
+    public User getReference(int id) {
         return em.getReference(User.class, id);
     }
 

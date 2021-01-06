@@ -29,6 +29,12 @@ class UserServiceTest {
     }
 
     @Test
+    void getByEmail(){
+        User actual = service.getByEmail("admin@gmail.com");
+        assertEquals(getUserTo(admin), getUserTo(actual));
+    }
+
+    @Test
     void create() {
         User expected = getNew();
         User actual = service.save(expected);

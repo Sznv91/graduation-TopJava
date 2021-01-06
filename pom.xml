@@ -50,7 +50,7 @@
         </dependency>
 
 
-        <!--        For resolve errors after add spring mvc and java higher v8-->
+        <!--        For resolve errors with spring mvc and java higher v8-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>

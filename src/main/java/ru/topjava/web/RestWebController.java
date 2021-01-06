@@ -17,6 +17,7 @@ import ru.topjava.entity.User;
 import ru.topjava.service.RestaurantService;
 import ru.topjava.service.UserService;
 import ru.topjava.service.VoteService;
+import ru.topjava.to.UserTo;
 import ru.topjava.utils.PermissionException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +51,7 @@ public class RestWebController extends ApplicationController {
     public ResponseEntity<Restaurant> updateRestaurantWithLocation(@PathVariable int restaurantId, @RequestBody Restaurant restaurant) {
         Restaurant created;
         if (restaurant.getId() != null && restaurant.getId().equals(restaurantId)) {
-            created = super.saveRestaurant(creatorUtil.update(Restaurant.class, restaurant), SecurityUtil.authUserId());
+            created = super.saveRestaurant(creatorUtil.update(Restaurant.class, restaurant), SecurityUtil.get().getUserTo());
         } else {
             throw new UnsupportedOperationException("JSON body not correct");
         }
@@ -63,7 +64,7 @@ public class RestWebController extends ApplicationController {
     @RequestMapping("/restaurants/{restaurantId}/add_dishes")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> addDishes(@PathVariable int restaurantId, @RequestBody List<Dish> dishes) {
-        Restaurant created = super.addDishes(restaurantId, creatorUtil.getDishList(dishes), SecurityUtil.authUserId());
+        Restaurant created = super.addDishes(restaurantId, creatorUtil.getDishList(dishes), SecurityUtil.get().getUserTo());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/restaurants/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -90,7 +91,7 @@ public class RestWebController extends ApplicationController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createRestaurantWithLocation(@RequestBody Restaurant restaurant) {
         Restaurant created =
-                super.saveRestaurant(creatorUtil.get(Restaurant.class, restaurant), SecurityUtil.authUserId());
+                super.saveRestaurant(creatorUtil.get(Restaurant.class, restaurant), SecurityUtil.get().getUserTo());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/restaurants/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -98,13 +99,8 @@ public class RestWebController extends ApplicationController {
     }
 
     @GetMapping("/user")
-    public User getAuthUser() {
-        return super.getUser(SecurityUtil.authUserId());
-    }
-
-    @GetMapping("/user/test_change_user/{userId}")
-    public void changeUser(@PathVariable int userId) {
-        SecurityUtil.setAuthUserId(userId);
+    public UserTo getAuthUser() {
+        return SecurityUtil.get().getUserTo();
     }
 
     @RequestMapping("/user/create")
