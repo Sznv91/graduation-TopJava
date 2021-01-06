@@ -45,29 +45,27 @@ public class CreatorUtil {
     }
 
     private Restaurant getRestaurant(Restaurant fromJson) {
-        fromJson.setId(null);
-        if (checkNullDishList(fromJson)) {
-            fromJson.setMenu(getDishList(fromJson.getMenu()));
-        }
-        return updateRestaurant(fromJson);
+        return restaurantBuilder(fromJson, new Restaurant(fromJson.getName()));
     }
 
     private Restaurant updateRestaurant(Restaurant fromJson) {
-        Restaurant result = new Restaurant(fromJson.getId(), fromJson.getName());
-        if (checkNullDishList(fromJson)) {
-            result.setMenu(fromJson.getMenu());
+        return restaurantBuilder(fromJson, new Restaurant(fromJson.getId(), fromJson.getName()));
+    }
+
+    private Restaurant restaurantBuilder(Restaurant fromJson, Restaurant createdRestaurant) {
+        if (fromJson.getMenu() != null && !fromJson.getMenu().isEmpty()) {
+            createdRestaurant.setMenu(getDishList(fromJson.getMenu()));
         }
         if (fromJson.isEnable() != null) {
-            result.setEnable(fromJson.isEnable());
+            createdRestaurant.setEnable(fromJson.isEnable());
         }
-        return result;
+        return createdRestaurant;
     }
 
-    public List<Dish> getDishList(List<Dish> fromJson) {
-        return fromJson.parallelStream().map(dish -> new Dish(dish.getName(), dish.getCost())).collect(Collectors.toList());
-    }
-
-    private boolean checkNullDishList(Restaurant fromJson) {
-        return fromJson.getMenu() != null && !fromJson.getMenu().isEmpty();
+    public List<Dish> getDishList(List<Dish> dishes) {
+        return dishes
+                .parallelStream()
+                .map(dish -> new Dish(dish.getName(), dish.getCost()))
+                .collect(Collectors.toList());
     }
 }

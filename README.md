@@ -2,7 +2,7 @@
 An actual version of graduation. Application use H2 DataBase (InMemory released) and start with some data in DB for demonstrate work.
 The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller.  
 
-#The structure of the document:  
+# The structure of the document:  
 * [Restaurants with today menu](#Get-Restaurant-list-with-today-menu)
 * [Restaurants with history menu](#Get-Restaurant-list-with-history-menu)
 * [Single restaurant with today menu](#Get-single-Restaurant-with-today-menu)
@@ -18,7 +18,7 @@ The "soapUi_project" directory contains the SoapUI project file for demonstratin
 * [Note](#Note)
 ___  
 
-#Structure of rest controller:  
+# Structure of rest controller:  
 ```
 \  
 |-restaurants\  
@@ -144,12 +144,14 @@ Added the dish will be had current date.
 # Vote for the restaurant
 ## Resource:
 [/restaurants/{restaurantId}/make_vote](http://localhost:8080/restaurants/{restaurantId}/make_vote)
+___
+For demonstration, you can use for example {restaurantId} = 100003
 ## Type:
 >GET
 #### Description:
 The resource allows to vote a single user for a restaurant. Voting can be made during the day. User can vote only for one restaurant.
 A second vote will update the vote for the other restaurant. Re-voting is only possible until 11am o'clock.
-For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number 26.
+For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number `26`.
 
 # Update Restaurant
 ## Resource: 
@@ -176,7 +178,7 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
 ### Example:
 ```JSON
 {
-   "id": 100007,
+   "id": 100003,
    "name": "Changed name",
    "menu": [   {
       "cost": 2.19,
