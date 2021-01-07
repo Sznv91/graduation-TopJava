@@ -35,7 +35,7 @@ ___
 |    
 |-user\
       |-create
-      |-admin
+             |-admin
     
 ```
 # Get Restaurant list with today menu

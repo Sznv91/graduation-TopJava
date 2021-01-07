@@ -6,10 +6,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ru.topjava.config.GraduationJpaConfig;
+import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
 import ru.topjava.entity.Vote;
+import ru.topjava.service.RestaurantTestData;
 import ru.topjava.service.UserTestData;
 import ru.topjava.service.VoteTestData;
 import ru.topjava.to.RestaurantTo;
@@ -17,6 +19,7 @@ import ru.topjava.to.UserTo;
 import ru.topjava.to.VoteTo;
 import ru.topjava.utils.PermissionException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -122,5 +125,16 @@ class ApplicationControllerTest {
         List<Restaurant> actual = controller.getRestaurantsWithHistory();
         System.out.println(actual.get(0).getId() + " Restaurant ID");
         assertEquals(2, actual.get(0).getVoteCount());
+    }
+
+    @Test
+    public void addDishes() {
+        List<Dish> dishList = new ArrayList<Dish>();
+        dishList.add(new Dish("added Dish", 15.14));
+        dishList.add(new Dish("qwe", 123));
+        controller.addDishes(RESTAURANT_ID, dishList, UserTo.getUserTo(UserTestData.admin));
+        Restaurant expect = restaurantWithTodayMenu;
+        expect.addDish(dishList);
+        assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(controller.getOneRestaurantWithTodayMenu(RESTAURANT_ID)));
     }
 }

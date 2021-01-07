@@ -1,5 +1,6 @@
 package ru.topjava.service;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.topjava.entity.Dish;
@@ -28,6 +29,7 @@ public class RestaurantService {
         return repository.save(restaurant);
     }
 
+    @Transactional
     public Restaurant update(Restaurant restaurant, UserTo admin) {
         checkAdminRole(admin);
         return repository.update(restaurant);
@@ -59,10 +61,11 @@ public class RestaurantService {
         return repository.getReference(id);
     }
 
+    @Transactional
     public Restaurant addDish(int restaurantId, List<Dish> dishes, UserTo admin) {
         Restaurant restaurant = getOneWithHistoryMenu(restaurantId);
         restaurant.addDish(dishes);
-        return create(restaurant, admin);
+        return update(restaurant, admin);
     }
 
 
