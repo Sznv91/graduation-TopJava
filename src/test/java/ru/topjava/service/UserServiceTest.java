@@ -8,6 +8,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ru.topjava.config.GraduationJpaConfig;
 import ru.topjava.entity.User;
+import ru.topjava.to.UserTo;
 import ru.topjava.utils.ExistException;
 import ru.topjava.utils.NotFoundException;
 
@@ -40,7 +41,7 @@ class UserServiceTest {
         User actual = service.save(expected);
         expected.setId(actual.getId());
         assertNotNull(actual);
-        assertEquals(getUserTo(expected), getUserTo(actual));
+        assertEquals(UserTo.getUserTo(expected), UserTo.getUserTo(actual));
     }
 
     @Test

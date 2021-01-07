@@ -58,4 +58,15 @@ public class UserTo {
     public int hashCode() {
         return Objects.hash(id, name, email, password, roles);
     }
+
+    @Override
+    public String toString() {
+        return "UserTo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
 }

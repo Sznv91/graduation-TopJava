@@ -39,6 +39,10 @@ public class ApplicationController {
         return restaurantService.create(restaurant, admin);
     }
 
+    public Restaurant updateRestaurant(Restaurant restaurant, UserTo admin) {
+        return restaurantService.update(restaurant, admin);
+    }
+
     public Restaurant addDishes(int restaurantId, List<Dish> dishes, UserTo admin) {
         return restaurantService.addDish(restaurantId, dishes, admin);
     }

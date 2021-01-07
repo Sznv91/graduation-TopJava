@@ -1,5 +1,7 @@
 package ru.topjava.repository;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.topjava.entity.Restaurant;
@@ -11,24 +13,24 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@EnableCaching
 @Repository
 public class RestaurantRepository {
-
-    private final RestaurantCrudRepository repository;
 
     @PersistenceContext
     EntityManager em;
 
-    public RestaurantRepository(RestaurantCrudRepository repository) {
-        this.repository = repository;
+    public Restaurant save(Restaurant restaurant) {
+        em.persist(restaurant);
+        return restaurant;
     }
 
-    public Restaurant save(Restaurant restaurant) {
-        return new Restaurant(repository.save(restaurant));
+    public Restaurant update(Restaurant restaurant) {
+        return em.merge(restaurant);
     }
 
     public Restaurant getOneWithHistoryDish(int id) { //Get with ALL DATE
-        return repository.findById(id).orElse(null);
+        return em.find(Restaurant.class, id);
     }
 
     public Restaurant getOneWithCurrentDate(@Param("id") int id) {
@@ -60,6 +62,7 @@ public class RestaurantRepository {
         return new Restaurant(restaurant);
     }
 
+    @Cacheable(value = "userRequest")
     public List<Restaurant> getTodayList() {
         return em.createQuery(
                 "SELECT DISTINCT r " +

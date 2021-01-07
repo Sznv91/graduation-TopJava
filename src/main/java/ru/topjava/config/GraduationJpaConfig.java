@@ -1,9 +1,16 @@
 package ru.topjava.config;
 
-import org.springframework.context.annotation.*;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -13,10 +20,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "ru.topjava.repository")
 @ComponentScan(value = {"ru.topjava.service", "ru.topjava.repository", "ru.topjava.controller"})
 @PropertySource("classpath:persistence-graduation.properties")
 @EnableTransactionManagement
@@ -70,5 +77,13 @@ public class GraduationJpaConfig {
 
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
         return hibernateProperties;
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        // configure and return an implementation of Spring's CacheManager SPI
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("userRequest"))); //default
+        return cacheManager;
     }
 }
