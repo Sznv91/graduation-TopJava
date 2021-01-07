@@ -104,6 +104,13 @@
             <version>2.4.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+
 
     </dependencies>
 
@@ -112,7 +119,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
         <hibernate.verion>5.4.25.Final</hibernate.verion>
-        <guava.version>21.0</guava.version>
+        <guava.version>30.1-jre</guava.version>
         <spring-security.version>5.4.2</spring-security.version>
     </properties>
 </project>

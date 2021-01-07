@@ -20,7 +20,7 @@ public class UserRepository {
     @PersistenceContext
     private EntityManager em;
 
-    @Cacheable(value = "userRequest")
+    @Cacheable(value = "userCache")
     public User getByEmail(String email) {
         return em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult();
     }

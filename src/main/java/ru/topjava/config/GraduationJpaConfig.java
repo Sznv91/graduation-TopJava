@@ -1,8 +1,5 @@
 package ru.topjava.config;
 
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,15 +17,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan(value = {"ru.topjava.service", "ru.topjava.repository", "ru.topjava.controller"})
+@ComponentScan(value = {"ru.topjava.service", "ru.topjava.repository", "ru.topjava.controller", "ru.topjava.config"})
 @PropertySource("classpath:persistence-graduation.properties")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@ImportResource("classpath:spring-security.xml")
+@ImportResource(value = {"classpath:spring-security.xml"})
 public class GraduationJpaConfig {
 
     private final Environment env;
@@ -79,11 +75,4 @@ public class GraduationJpaConfig {
         return hibernateProperties;
     }
 
-    @Bean
-    public CacheManager cacheManager() {
-        // configure and return an implementation of Spring's CacheManager SPI
-        SimpleCacheManager cacheManager = new SimpleCacheManager();
-        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("userRequest"))); //default
-        return cacheManager;
-    }
 }

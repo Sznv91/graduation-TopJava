@@ -62,7 +62,7 @@ public class RestaurantRepository {
         return new Restaurant(restaurant);
     }
 
-    @Cacheable(value = "userRequest")
+    @Cacheable(value = "RestaurantCache", cacheManager = "RestaurantCache")
     public List<Restaurant> getTodayList() {
         return em.createQuery(
                 "SELECT DISTINCT r " +

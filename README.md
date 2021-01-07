@@ -16,6 +16,7 @@ Update: Removed Spring-Data-JPA repository and add Spring-Cache. Now [Restaurant
 * [Update Restaurant](#Update-Restaurant)
 * [Create regular User](#Create-User)
 * [Create admin User](#Create-Admin)
+* [Cache](#Spring-Cache)
 * [Known issues](#Known-issues)
 * [Note](#Note)
 ___  
@@ -238,8 +239,13 @@ The fields "name", "email" and "password" are required.
 >POST
 #### Description:
 Resource create users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
-Remaining description does not differ from [Create User](#Create-User).
+Remaining description does not differ from [Create User](#Create-Regular-User).
 
+#Spring Cache
+In application use two CacheManager with different parametrs:  
+>The user is stored in the cache 5 minutes after last access.
+
+>The restaurant is stored in the cache 30 minutes after write or until the cache reaches 300 records.
 
 # Known issues
 - Unhandled exception:
