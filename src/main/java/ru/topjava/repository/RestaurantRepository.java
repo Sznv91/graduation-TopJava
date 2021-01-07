@@ -1,5 +1,7 @@
 package ru.topjava.repository;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.topjava.entity.Restaurant;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@EnableCaching
 @Repository
 public class RestaurantRepository {
 
@@ -59,6 +62,7 @@ public class RestaurantRepository {
         return new Restaurant(restaurant);
     }
 
+    @Cacheable(value = "userRequest")
     public List<Restaurant> getTodayList() {
         return em.createQuery(
                 "SELECT DISTINCT r " +

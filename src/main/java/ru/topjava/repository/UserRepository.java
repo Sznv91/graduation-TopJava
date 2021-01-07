@@ -1,5 +1,7 @@
 package ru.topjava.repository;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import ru.topjava.entity.User;
@@ -10,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 
+@EnableCaching
 @Repository
 public class UserRepository {
 
@@ -17,6 +20,7 @@ public class UserRepository {
     @PersistenceContext
     private EntityManager em;
 
+    @Cacheable(value = "userRequest")
     public User getByEmail(String email) {
         return em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult();
     }

@@ -1,6 +1,8 @@
 # graduation-TopJava
 An actual version of graduation. Application use H2 DataBase (InMemory released) and start with some data in DB for demonstrate work.
-The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller.  
+The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller.
+___  
+Update: Removed Spring-Data-JPA repository and add Spring-Cache. Now [Restaurants with today menu](#Get-Restaurant-list-with-today-menu) and request user which uses Spring security are cached.
 
 # The structure of the document:  
 * [Restaurants with today menu](#Get-Restaurant-list-with-today-menu)
@@ -242,9 +244,6 @@ Remaining description does not differ from [Create User](#Create-User).
 # Known issues
 - Unhandled exception:
 An error that occurs when saving two users with the same email address was not handled.
-- Excessive hibernate access to the database. This is due to the use of spring data jpa. 
-There is no possibility to manually manage transactions. Will be fixed in the future.
-- Hibernate cache not yet connected. Will be fixed in the future.
 - Not yet implemented test methods for REST controller and Spring Security. But their work is demonstrated in the SoapUi project. 
 In the future, it is planned to release JUnit tests.
 
