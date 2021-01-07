@@ -133,7 +133,7 @@ class ApplicationControllerTest {
         dishList.add(new Dish("added Dish", 15.14));
         dishList.add(new Dish("qwe", 123));
         controller.addDishes(RESTAURANT_ID, dishList, UserTo.getUserTo(UserTestData.admin));
-        Restaurant expect = restaurantWithTodayMenu;
+        Restaurant expect = new Restaurant(restaurantWithTodayMenu);
         expect.addDish(dishList);
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(controller.getOneRestaurantWithTodayMenu(RESTAURANT_ID)));
     }
