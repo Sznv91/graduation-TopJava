@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class CacheConfig {
 
+//    https://habr.com/ru/post/465667/
     @Primary
     @Bean("userCache")
     public CacheManager userCacheManager() {

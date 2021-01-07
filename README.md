@@ -18,7 +18,7 @@ Update: Removed Spring-Data-JPA repository and add Spring-Cache. Now [Restaurant
 * [Create admin User](#Create-Admin)
 * [Cache](#Spring-Cache)
 * [Known issues](#Known-issues)
-* [Note](#Note)
+* [Authorization](#Authorization)
 ___  
 
 # Structure of rest controller:  
@@ -120,7 +120,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 }
 ```
 #### Description:
-Creat object can only user with role "[ADMIN](#Note)".
+Creat object can only user with role "[ADMIN](#Authorization)".
 Restaurant can be creat without "menu" and flag "enable".
 Flag "enable" will be installed to "true" automatically.
 If the "id" or date in menu fields defined in the JSON body, it will be ignored and the new object "Restaurant" will be assigned an ID from the DB, date dish in a menu was install to current date.
@@ -141,7 +141,7 @@ The field "name" are required.
       ]
 ```
 #### Description:
-Resource allows to add one or more dishes to restaurants. Resource available only users with [ADMIN](#Note) role.
+Resource allows to add one or more dishes to restaurants. Resource available only users with [ADMIN](#Authorization) role.
 Added the dish will be had current date.
 
 # Vote for the restaurant
@@ -196,7 +196,7 @@ For change vote time limiter you need change class `ru.topjava.service.VoteServi
 }
 ```
 #### Description:
-Resource available only users with [ADMIN](#Note) role. Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
+Resource available only users with [ADMIN](#Authorization) role. Resource allows to modified entity "Restaurant" and add or update Dish related to the Restaurant.
 Field "id" is required, another rule same as [Create Restaurant](#Create-Restaurant) resource.
 
 # Delete Restaurant
@@ -241,7 +241,7 @@ The fields "name", "email" and "password" are required.
 Resource create users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
 Remaining description does not differ from [Create User](#Create-Regular-User).
 
-#Spring Cache
+# Spring Cache
 In application use two CacheManager with different parametrs:  
 >The user is stored in the cache 5 minutes after last access.
 
@@ -253,10 +253,11 @@ An error that occurs when saving two users with the same email address was not h
 - Not yet implemented test methods for REST controller and Spring Security. But their work is demonstrated in the SoapUi project. 
 In the future, it is planned to release JUnit tests.
 
-# Note
-Spring Security is connected to the project. With start application two users are automatically created.  
+# Authorization  
+Spring Security is connected to the project. With start application two users are automatically created. 
+ 
 `USER:`
-> user@yandex.ru | password
+> user@yandex.ru  | password
 
 `ADMIN:`
 > admin@gmail.com | admin
