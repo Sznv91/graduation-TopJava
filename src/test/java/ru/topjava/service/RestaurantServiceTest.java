@@ -47,7 +47,7 @@ class RestaurantServiceTest {
     void setDisable() {
         Restaurant expect = service.getOneWithHistoryMenu(RESTAURANT_ID);
         expect.setEnable(false);
-        Restaurant actual = service.create(expect, UserTo.getUserTo(UserTestData.admin));
+        Restaurant actual = service.update(expect, UserTo.getUserTo(UserTestData.admin));
         assertEquals(RestaurantTo.getRestaurantTo(expect), RestaurantTo.getRestaurantTo(actual));
 
     }

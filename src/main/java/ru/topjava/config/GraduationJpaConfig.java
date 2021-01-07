@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "ru.topjava.repository")
 @ComponentScan(value = {"ru.topjava.service", "ru.topjava.repository", "ru.topjava.controller"})
 @PropertySource("classpath:persistence-graduation.properties")
 @EnableTransactionManagement

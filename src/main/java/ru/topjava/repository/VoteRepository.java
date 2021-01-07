@@ -19,14 +19,9 @@ public class VoteRepository {
     @PersistenceContext
     EntityManager em;
 
-    VoteCrudRepository repository;
-
-    public VoteRepository(VoteCrudRepository repository) {
-        this.repository = repository;
-    }
-
     public Vote create(Vote vote) {
-        return repository.save(new Vote(vote));
+        em.persist(vote);
+        return vote;
     }
 
     public int hasVoteToday(User user) {
@@ -47,7 +42,7 @@ public class VoteRepository {
 
     public Vote update(Vote vote, int voteId) {
         vote.setId(voteId);
-        return create(vote);
+        return em.merge(vote);
     }
 
     public Map<Integer, Integer> getVoteMap(LocalDateTime startDate, LocalDateTime endDate) {
@@ -65,7 +60,7 @@ public class VoteRepository {
     }
 
     public Vote get(@NotNull int id) {
-        return repository.findById(id).orElse(null);
+        return em.find(Vote.class, id);
     }
 
     private Map<String, LocalDateTime> getCurrentDate() {

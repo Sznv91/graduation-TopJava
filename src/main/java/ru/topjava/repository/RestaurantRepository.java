@@ -14,21 +14,20 @@ import java.util.List;
 @Repository
 public class RestaurantRepository {
 
-    private final RestaurantCrudRepository repository;
-
     @PersistenceContext
     EntityManager em;
 
-    public RestaurantRepository(RestaurantCrudRepository repository) {
-        this.repository = repository;
+    public Restaurant save(Restaurant restaurant) {
+        em.persist(restaurant);
+        return restaurant;
     }
 
-    public Restaurant save(Restaurant restaurant) {
-        return new Restaurant(repository.save(restaurant));
+    public Restaurant update(Restaurant restaurant) {
+        return em.merge(restaurant);
     }
 
     public Restaurant getOneWithHistoryDish(int id) { //Get with ALL DATE
-        return repository.findById(id).orElse(null);
+        return em.find(Restaurant.class, id);
     }
 
     public Restaurant getOneWithCurrentDate(@Param("id") int id) {

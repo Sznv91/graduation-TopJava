@@ -24,9 +24,17 @@ public class RestaurantService {
 
     @Transactional
     public Restaurant create(Restaurant restaurant, UserTo admin) {
-        if (admin.getRoles().contains(Role.ADMIN)) {
-            return repository.save(restaurant);
-        } else {
+        checkAdminRole(admin);
+        return repository.save(restaurant);
+    }
+
+    public Restaurant update(Restaurant restaurant, UserTo admin) {
+        checkAdminRole(admin);
+        return repository.update(restaurant);
+    }
+
+    private void checkAdminRole(UserTo admin) {
+        if (!admin.getRoles().contains(Role.ADMIN)) {
             throw new PermissionException("User id: " + admin.getId() + "haven't role ADMIN");
         }
     }

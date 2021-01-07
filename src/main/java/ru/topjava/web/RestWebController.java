@@ -51,7 +51,7 @@ public class RestWebController extends ApplicationController {
     public ResponseEntity<Restaurant> updateRestaurantWithLocation(@PathVariable int restaurantId, @RequestBody Restaurant restaurant) {
         Restaurant created;
         if (restaurant.getId() != null && restaurant.getId().equals(restaurantId)) {
-            created = super.saveRestaurant(creatorUtil.update(Restaurant.class, restaurant), SecurityUtil.get().getUserTo());
+            created = super.updateRestaurant(creatorUtil.update(Restaurant.class, restaurant), SecurityUtil.get().getUserTo());
         } else {
             throw new UnsupportedOperationException("JSON body not correct");
         }

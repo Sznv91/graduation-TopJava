@@ -13,21 +13,16 @@ import javax.validation.constraints.NotNull;
 @Repository
 public class UserRepository {
 
-    private final UserCrudRepository repository;
 
     @PersistenceContext
     private EntityManager em;
-
-    public UserRepository(UserCrudRepository repository) {
-        this.repository = repository;
-    }
 
     public User getByEmail(String email) {
         return em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult();
     }
 
     public User getById(int id) {
-        User result = repository.findById(id).orElse(null);//getById(id);
+        User result = em.find(User.class, id);
         if (result != null) {
             return result;
         } else {
@@ -38,7 +33,8 @@ public class UserRepository {
 
     public User create(@NotNull User user) {
         if (user.isNew()) {
-            return new User(save(user));
+            em.persist(user);
+            return em.find(User.class, user.getId());
         } else {
             throw new ExistException("User " + user.getId() + " already exist");
         }
@@ -47,22 +43,25 @@ public class UserRepository {
     public User update(User user) {
         Assert.notNull(user, "User must not be null");
         if (user.getId() != null) {
-            return save(user);
+            return em.merge(user);
         } else {
             throw new NotFoundException("User " + user.getName() + " have null Id");
         }
     }
 
     public Boolean delete(int id) {
-        return repository.delete(id) != 0;
+        User u;
+        try {
+            u = getById(id);
+            em.remove(u);
+            return true;
+        } catch (NotFoundException e) {
+            return false;
+        }
     }
 
     public User getReference(int id) {
         return em.getReference(User.class, id);
-    }
-
-    private User save(User user) {
-        return repository.save(user);
     }
 
 }
