@@ -2,7 +2,7 @@
 An actual version of graduation. Application use H2 DataBase (InMemory released) and start with some data in DB for demonstrate work.
 The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller.
 ___  
-Update: Removed Spring-Data-JPA repository and add Spring-Cache. Now [Restaurants with today menu](#Get-Restaurant-list-with-today-menu) and request user which uses Spring security are cached.  
+Update: Removed Spring-Data-JPA repository and add [Spring-Cache](#Spring-Cache). Now [Restaurants with today menu](#Get-Restaurant-list-with-today-menu) and request user which uses Spring security are cached.  
 Update: Added some test REST controller and Spring Security for demonstrate their works.
 
 # The structure of the document:  
@@ -114,7 +114,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
    "enable": true
 }
 ```
-###Example 2:
+### Example 2:
 ```JSON
 {
    "name": "New Restaurant"
@@ -156,6 +156,7 @@ For demonstration, you can use for example {restaurantId} = 100003
 The resource allows to vote a single user for a restaurant. Voting can be made during the day. User can vote only for one restaurant.
 A second vote will update the vote for the other restaurant. Re-voting is only possible until 11am o'clock.
 For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number `26`.
+After voting, the resource will return the [Restaurant](#Get-single-Restaurant-with-today-menu) with the changed vote counter.
 
 # Update Restaurant
 ## Resource: 

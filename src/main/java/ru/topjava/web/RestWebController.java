@@ -72,9 +72,9 @@ public class RestWebController extends ApplicationController {
     }
 
     @RequestMapping("/restaurants/{restaurantId}/make_vote")
-    public void vote(@PathVariable int restaurantId, HttpServletResponse response) throws IOException {
+    public Restaurant vote(@PathVariable int restaurantId, HttpServletResponse response) throws IOException {
         super.saveVote(restaurantId, SecurityUtil.authUserId());
-        response.sendRedirect("../");
+        return super.getOneRestaurantWithTodayMenu(restaurantId);
     }
 
     @GetMapping("/restaurants/history")

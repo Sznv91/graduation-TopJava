@@ -3,6 +3,8 @@ package ru.topjava.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringJUnitWebConfig(classes = {GraduationJpaConfig.class, TestConfig.class})
 
 @Transactional
+@Sql(scripts = {"classpath:initDB_H2.sql", "classpath:populateDB.sql"}, config = @SqlConfig(encoding = "UTF-8"))
 class RestWebControllerTest {
 
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
@@ -69,7 +72,6 @@ class RestWebControllerTest {
         perform(MockMvcRequestBuilders.post("/restaurants/create").contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"New Restaurant\"}").accept(MediaType.APPLICATION_JSON).with(TestUtil.userAuth(UserTestData.admin)))
                 .andExpect(status().isCreated())
                 .andDo(print())
-                // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string("{\"id\":100007,\"name\":\"New Restaurant\",\"menu\":[],\"enable\":true,\"voteCount\":0}"))
         ;
@@ -80,9 +82,26 @@ class RestWebControllerTest {
         perform(MockMvcRequestBuilders.post("/restaurants/100002/add_dishes").contentType(MediaType.APPLICATION_JSON).content("[{\"cost\":10.01,\"name\":\"first dish First restaurant123\"},{\"cost\":22.1,\"name\":\"second dish First restauran321t\"}]").accept(MediaType.APPLICATION_JSON).with(TestUtil.userAuth(UserTestData.admin)))
                 .andExpect(status().isCreated())
                 .andDo(print())
-                // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string("{\"id\":100002,\"name\":\"first restaurant\",\"menu\":[{\"cost\":1.01,\"name\":\"first dish First restaurant\",\"date\":[2021,1,8]},{\"cost\":2.1,\"name\":\"second dish First restaurant\",\"date\":[2021,1,8]},{\"cost\":3.11,\"name\":\"Late Dish First restaurant\",\"date\":[2020,10,20]},{\"cost\":10.01,\"name\":\"first dish First restaurant123\",\"date\":[2021,1,8]},{\"cost\":22.1,\"name\":\"second dish First restauran321t\",\"date\":[2021,1,8]}],\"enable\":true,\"voteCount\":0}"))
         ;
+    }
+
+    @Test
+    void makeVote() throws Exception {
+        perform(MockMvcRequestBuilders.get("/restaurants/100003").with(TestUtil.userAuth(UserTestData.user)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().string("{\"id\":100003,\"name\":\"second restaurant\",\"menu\":[{\"cost\":1.02,\"name\":\"first dish Second restaurant\",\"date\":[2021,1,8]},{\"cost\":2.2,\"name\":\"second dish Second restaurant\",\"date\":[2021,1,8]}],\"enable\":true,\"voteCount\":0}"))
+        ;
+
+        perform(MockMvcRequestBuilders.get("/restaurants/100003/make_vote").with(TestUtil.userAuth(UserTestData.user)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().string("{\"id\":100003,\"name\":\"second restaurant\",\"menu\":[{\"cost\":1.02,\"name\":\"first dish Second restaurant\",\"date\":[2021,1,8]},{\"cost\":2.2,\"name\":\"second dish Second restaurant\",\"date\":[2021,1,8]}],\"enable\":true,\"voteCount\":1}"))
+        ;
+
     }
 }
