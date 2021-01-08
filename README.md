@@ -2,7 +2,8 @@
 An actual version of graduation. Application use H2 DataBase (InMemory released) and start with some data in DB for demonstrate work.
 The "soapUi_project" directory contains the SoapUI project file for demonstrating the operation of the REST controller.
 ___  
-Update: Removed Spring-Data-JPA repository and add Spring-Cache. Now [Restaurants with today menu](#Get-Restaurant-list-with-today-menu) and request user which uses Spring security are cached.
+Update: Removed Spring-Data-JPA repository and add Spring-Cache. Now [Restaurants with today menu](#Get-Restaurant-list-with-today-menu) and request user which uses Spring security are cached.  
+Update: Added some test REST controller and Spring Security for demonstrate their works.
 
 # The structure of the document:  
 * [Restaurants with today menu](#Get-Restaurant-list-with-today-menu)
@@ -250,8 +251,6 @@ In application use two CacheManager with different parametrs:
 # Known issues
 - Unhandled exception:
 An error that occurs when saving two users with the same email address was not handled.
-- Not yet implemented test methods for REST controller and Spring Security. But their work is demonstrated in the SoapUi project. 
-In the future, it is planned to release JUnit tests.
 
 # Authorization  
 Spring Security is connected to the project. With start application two users are automatically created. 
