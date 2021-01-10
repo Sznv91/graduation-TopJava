@@ -9,6 +9,7 @@ import ru.topjava.utils.ExistException;
 import ru.topjava.utils.NotFoundException;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 
@@ -37,8 +38,13 @@ public class UserRepository {
 
     public User create(@NotNull User user) {
         if (user.isNew()) {
-            em.persist(user);
-            return em.find(User.class, user.getId());
+            try {
+                em.createQuery("SELECT u.id FROM User u WHERE u.email=:email").setParameter("email", user.getEmail()).getSingleResult();
+                throw new ExistException("User with email" + user.getEmail() + " already exist");
+            } catch (NoResultException e) {
+                em.persist(user);
+                return em.find(User.class, user.getId());
+            }
         } else {
             throw new ExistException("User " + user.getId() + " already exist");
         }

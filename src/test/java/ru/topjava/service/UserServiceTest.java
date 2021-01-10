@@ -7,6 +7,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ru.topjava.config.GraduationJpaConfig;
+import ru.topjava.entity.Role;
 import ru.topjava.entity.User;
 import ru.topjava.to.UserTo;
 import ru.topjava.utils.ExistException;
@@ -47,6 +48,12 @@ class UserServiceTest {
     @Test
     void createExistId() {
         assertThrows(ExistException.class, () -> service.save(user));
+    }
+
+    @Test
+    void creatExistEmail(){
+        User toCreate = new User(null, "New User", "user@yandex.ru", "123321", Role.USER);
+        assertThrows(ExistException.class, ()-> service.save(toCreate));
     }
 
     @Test

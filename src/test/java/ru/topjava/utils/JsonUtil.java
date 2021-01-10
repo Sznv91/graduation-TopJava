@@ -10,12 +10,11 @@ public class JsonUtil {
     public static String getJsonString(Restaurant restaurant) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JSR310Module());
-//        String result = "";
         try {
             return mapper.writeValueAsString(restaurant);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            throw new RuntimeException("Что - то пошло не так с JSON");
+            throw new IllegalArgumentException("the object is not restaurant");
         }
     }
 }

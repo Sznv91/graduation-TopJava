@@ -250,8 +250,9 @@ In application use two CacheManager with different parametrs:
 >The restaurant is stored in the cache 30 minutes after write or until the cache reaches 300 records.
 
 # Known issues
-- Unhandled exception:
-An error that occurs when saving two users with the same email address was not handled.
+- ~~Unhandled exception:
+An error that occurs when saving two users with the same email address was not handled.~~  
+Resolved. The solution method is not effective,but it works.
 
 # Authorization  
 Spring Security is connected to the project. With start application two users are automatically created. 
