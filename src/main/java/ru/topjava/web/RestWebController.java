@@ -2,12 +2,7 @@ package ru.topjava.web;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.controller.ApplicationController;
 import ru.topjava.entity.Dish;
@@ -47,7 +42,7 @@ public class RestWebController extends ApplicationController {
     }
 
     @RequestMapping("/restaurants/{restaurantId}/update")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> updateRestaurantWithLocation(@PathVariable int restaurantId, @RequestBody Restaurant restaurant) {
         Restaurant created;
         if (restaurant.getId() != null && restaurant.getId().equals(restaurantId)) {
@@ -62,7 +57,7 @@ public class RestWebController extends ApplicationController {
     }
 
     @RequestMapping("/restaurants/{restaurantId}/add_dishes")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> addDishes(@PathVariable int restaurantId, @RequestBody List<Dish> dishes) {
         Restaurant created = super.addDishes(restaurantId, creatorUtil.getDishList(dishes), SecurityUtil.get().getUserTo());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()

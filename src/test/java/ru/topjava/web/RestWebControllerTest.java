@@ -14,18 +14,24 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import ru.topjava.config.GraduationJpaConfig;
+import ru.topjava.entity.Dish;
+import ru.topjava.entity.Restaurant;
+import ru.topjava.service.RestaurantTestData;
 import ru.topjava.service.UserTestData;
-import ru.topjava.utils.TestUtil;
+import ru.topjava.utils.JsonUtil;
+import ru.topjava.utils.AuthUtil;
 
 import javax.annotation.PostConstruct;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringJUnitWebConfig(classes = {GraduationJpaConfig.class, TestConfig.class})
+@SpringJUnitWebConfig(classes = {TestConfig.class})
 
 @Transactional
 @Sql(scripts = {"classpath:initDB_H2.sql", "classpath:populateDB.sql"}, config = @SqlConfig(encoding = "UTF-8"))
@@ -58,49 +64,70 @@ class RestWebControllerTest {
 
     @Test
     void getOneRestaurant() throws Exception {
-        perform(MockMvcRequestBuilders.get("/restaurants/100002").with(TestUtil.userAuth(UserTestData.user)))
+        Restaurant expect = RestaurantTestData.restaurantWithTodayMenu;
+        expect.setVoteCount(1);
+        perform(MockMvcRequestBuilders.get("/restaurants/100002").with(AuthUtil.userAuth(UserTestData.user)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("{\"id\":100002,\"name\":\"first restaurant\",\"menu\":[{\"cost\":1.01,\"name\":\"first dish First restaurant\",\"date\":[2021,1,8]},{\"cost\":2.1,\"name\":\"second dish First restaurant\",\"date\":[2021,1,8]}],\"enable\":true,\"voteCount\":1}"))
+        .andExpect(content().string(JsonUtil.getJsonString(expect)))
         ;
     }
 
     @Test
     void createRestaurant() throws Exception {
-        perform(MockMvcRequestBuilders.post("/restaurants/create").contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"New Restaurant\"}").accept(MediaType.APPLICATION_JSON).with(TestUtil.userAuth(UserTestData.admin)))
+        Restaurant expect = new Restaurant(100007, "New Restaurant", true);
+        expect.setMenu(new ArrayList<Dish>());
+
+        perform(MockMvcRequestBuilders.post("/restaurants/create").contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"New Restaurant\"}").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
                 .andExpect(status().isCreated())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("{\"id\":100007,\"name\":\"New Restaurant\",\"menu\":[],\"enable\":true,\"voteCount\":0}"))
+                .andExpect(content().string(JsonUtil.getJsonString(expect)))
+
         ;
     }
 
     @Test
     void addDish() throws Exception {
-        perform(MockMvcRequestBuilders.post("/restaurants/100002/add_dishes").contentType(MediaType.APPLICATION_JSON).content("[{\"cost\":10.01,\"name\":\"first dish First restaurant123\"},{\"cost\":22.1,\"name\":\"second dish First restauran321t\"}]").accept(MediaType.APPLICATION_JSON).with(TestUtil.userAuth(UserTestData.admin)))
+        Restaurant expect = new Restaurant(100002, "first restaurant", true,
+                new Dish("first dish First restaurant", 1.01),
+                new Dish("second dish First restaurant", 2.1),
+                new Dish("Late Dish First restaurant", 3.11, LocalDate.of(2020, 10, 20)),
+                new Dish("first dish First restaurant123", 10.01),
+                new Dish("second dish First restauran321t", 22.1));
+        perform(MockMvcRequestBuilders.post("/restaurants/100002/add_dishes").contentType(MediaType.APPLICATION_JSON).content("[{\"cost\":10.01,\"name\":\"first dish First restaurant123\"},{\"cost\":22.1,\"name\":\"second dish First restauran321t\"}]").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
                 .andExpect(status().isCreated())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("{\"id\":100002,\"name\":\"first restaurant\",\"menu\":[{\"cost\":1.01,\"name\":\"first dish First restaurant\",\"date\":[2021,1,8]},{\"cost\":2.1,\"name\":\"second dish First restaurant\",\"date\":[2021,1,8]},{\"cost\":3.11,\"name\":\"Late Dish First restaurant\",\"date\":[2020,10,20]},{\"cost\":10.01,\"name\":\"first dish First restaurant123\",\"date\":[2021,1,8]},{\"cost\":22.1,\"name\":\"second dish First restauran321t\",\"date\":[2021,1,8]}],\"enable\":true,\"voteCount\":0}"))
+                .andExpect(content().string(JsonUtil.getJsonString(expect)));
+
         ;
     }
 
     @Test
     void makeVote() throws Exception {
-        perform(MockMvcRequestBuilders.get("/restaurants/100003").with(TestUtil.userAuth(UserTestData.user)))
+        Restaurant expect = new Restaurant(100003, "second restaurant", true,
+                new Dish("first dish Second restaurant", 1.02),
+                new Dish("second dish Second restaurant", 2.2));
+
+        perform(MockMvcRequestBuilders.get("/restaurants/100003").with(AuthUtil.userAuth(UserTestData.user)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("{\"id\":100003,\"name\":\"second restaurant\",\"menu\":[{\"cost\":1.02,\"name\":\"first dish Second restaurant\",\"date\":[2021,1,8]},{\"cost\":2.2,\"name\":\"second dish Second restaurant\",\"date\":[2021,1,8]}],\"enable\":true,\"voteCount\":0}"))
+                .andExpect(content().string(JsonUtil.getJsonString(expect)));
+
         ;
 
-        perform(MockMvcRequestBuilders.get("/restaurants/100003/make_vote").with(TestUtil.userAuth(UserTestData.user)))
+        expect.setVoteCount(1);
+
+        perform(MockMvcRequestBuilders.get("/restaurants/100003/make_vote").with(AuthUtil.userAuth(UserTestData.user)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("{\"id\":100003,\"name\":\"second restaurant\",\"menu\":[{\"cost\":1.02,\"name\":\"first dish Second restaurant\",\"date\":[2021,1,8]},{\"cost\":2.2,\"name\":\"second dish Second restaurant\",\"date\":[2021,1,8]}],\"enable\":true,\"voteCount\":1}"))
+                .andExpect(content().string(JsonUtil.getJsonString(expect)))
+
         ;
 
     }
