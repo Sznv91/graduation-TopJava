@@ -16,7 +16,7 @@ Update: Added some test REST controller and Spring Security for demonstrate thei
 * [Add Dishes](#Add-Dishes)
 * [Vote for a restaurant](#Vote-for-the-restaurant)
 * [Update Restaurant](#Update-Restaurant)
-* [Create regular User](#Create-User)
+* [Create regular User](#Create-Regular-User)
 * [Create admin User](#Create-Admin)
 * [Cache](#Spring-Cache)
 * [Known issues](#Known-issues)
@@ -182,9 +182,9 @@ After voting, the resource will return the [Restaurant](#Get-single-Restaurant-w
 
 # Update Restaurant
 ## Resource: 
-`/restaurants/{restaurantId}/update`
+`/restaurants/{restaurantId}`
 ## Type:
->POST
+>PUT
 ### Format JSON:
 ```
 {

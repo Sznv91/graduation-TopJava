@@ -41,7 +41,7 @@ public class RestWebController extends ApplicationController {
         return super.getOneRestaurantWithTodayMenu(restaurantId);
     }
 
-    @RequestMapping("/restaurants/{restaurantId}/update")
+    @RequestMapping("/restaurants/{restaurantId}")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> updateRestaurantWithLocation(@PathVariable int restaurantId, @RequestBody Restaurant restaurant) {
         Restaurant created;
