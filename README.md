@@ -90,7 +90,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Get single Restaurant with history menu
 ## Resource: 
-/restaurants/history/{restaurantId}
+/restaurants/{restaurantId}/history
 ___
 For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/history/100003). It has a dish with date 2020.10.20
 ## Type
@@ -101,7 +101,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Create Restaurant
 ## Resource: 
-[/restaurants/create](http://localhost:8080/restaurants/create)
+[/restaurants](http://localhost:8080/restaurants)
 ## Type:
 >POST
 ### Format JSON:

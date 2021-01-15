@@ -82,7 +82,7 @@ public class RestWebController extends ApplicationController {
         return super.getOneRestaurantWithHistoryMenu(restaurantId);
     }
 
-    @RequestMapping("/restaurants/create")
+    @RequestMapping("/restaurants")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createRestaurantWithLocation(@RequestBody Restaurant restaurant) {
         Restaurant created =

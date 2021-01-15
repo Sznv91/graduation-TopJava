@@ -80,7 +80,7 @@ class RestWebControllerTest {
         Restaurant expect = new Restaurant(100007, "New Restaurant", true);
         expect.setMenu(new ArrayList<Dish>());
 
-        perform(MockMvcRequestBuilders.post("/restaurants/create").contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"New Restaurant\"}").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
+        perform(MockMvcRequestBuilders.post("/restaurants").contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"New Restaurant\"}").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
                 .andExpect(status().isCreated())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
