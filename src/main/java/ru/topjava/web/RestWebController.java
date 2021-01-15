@@ -41,7 +41,7 @@ public class RestWebController extends ApplicationController {
         return super.getOneRestaurantWithTodayMenu(restaurantId);
     }
 
-    @RequestMapping("/restaurants/{restaurantId}/update")
+    @RequestMapping("/restaurants/{restaurantId}")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> updateRestaurantWithLocation(@PathVariable int restaurantId, @RequestBody Restaurant restaurant) {
         Restaurant created;
@@ -77,12 +77,12 @@ public class RestWebController extends ApplicationController {
         return super.getRestaurantsWithHistory();
     }
 
-    @GetMapping("/restaurants/history/{restaurantId}")
+    @GetMapping("/restaurants/{restaurantId}/history")
     public Restaurant getOneRestaurantsWithHistoryDish(@PathVariable int restaurantId) {
         return super.getOneRestaurantWithHistoryMenu(restaurantId);
     }
 
-    @RequestMapping("/restaurants/create")
+    @RequestMapping("/restaurants")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createRestaurantWithLocation(@RequestBody Restaurant restaurant) {
         Restaurant created =

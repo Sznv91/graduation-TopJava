@@ -16,7 +16,7 @@ Update: Added some test REST controller and Spring Security for demonstrate thei
 * [Add Dishes](#Add-Dishes)
 * [Vote for a restaurant](#Vote-for-the-restaurant)
 * [Update Restaurant](#Update-Restaurant)
-* [Create regular User](#Create-User)
+* [Create regular User](#Create-Regular-User)
 * [Create admin User](#Create-Admin)
 * [Cache](#Spring-Cache)
 * [Known issues](#Known-issues)
@@ -79,9 +79,9 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Get single Restaurant with today menu
 ## Resource: 
-[/restaurants/{restaurantId}](http://localhost:8080/restaurants/{restaurantId})
+/restaurants/{restaurantId}
 ___
-For demonstration, you can use for example {restaurantId} = 100002
+For demonstration, you can use for example [{restaurantId} = 100002](http://localhost:8080/restaurants/100002)
 ## Type
 >GET
 #### Description:
@@ -90,9 +90,9 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Get single Restaurant with history menu
 ## Resource: 
-[/restaurants/history/{restaurantId}](http://localhost:8080/restaurants/history/{restaurantId})
+/restaurants/{restaurantId}/history
 ___
-For demonstration, you can use for example {restaurantId} = 100003. It has a dish with date 2020.10.20
+For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/history/100003). It has a dish with date 2020.10.20
 ## Type
 >GET
 #### Description:
@@ -101,7 +101,7 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Create Restaurant
 ## Resource: 
-[/restaurants/create](http://localhost:8080/restaurants/create)
+[/restaurants](http://localhost:8080/restaurants)
 ## Type:
 >POST
 ### Format JSON:
@@ -149,7 +149,8 @@ The field "name" are required.
 
 # Add Dishes
 ## Resource:
-[/restaurants/{restaurantId}/add_dish](http://localhost:8080/restaurants/{restaurantId}/add_dish)
+`/restaurants/{restaurantId}/add_dish`  
+
 ## Type:
 >POST
 ### Format JSON:
@@ -167,9 +168,10 @@ Added the dish will be had current date.
 
 # Vote for the restaurant
 ## Resource:
-[/restaurants/{restaurantId}/make_vote](http://localhost:8080/restaurants/{restaurantId}/make_vote)
+`/restaurants/{restaurantId}/make_vote`
+
 ___
-For demonstration, you can use for example {restaurantId} = 100003
+For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/100003/make_vote)
 ## Type:
 >GET
 #### Description:
@@ -180,9 +182,9 @@ After voting, the resource will return the [Restaurant](#Get-single-Restaurant-w
 
 # Update Restaurant
 ## Resource: 
-[/restaurants/{restaurantId}/update](http://localhost:8080/restaurants/{restaurantId}/update)
+`/restaurants/{restaurantId}`
 ## Type:
->POST
+>PUT
 ### Format JSON:
 ```
 {
@@ -268,11 +270,6 @@ In application use two CacheManager with different parametrs:
 >The user is stored in the cache 5 minutes after last access.
 
 >The restaurant is stored in the cache 30 minutes after write or until the cache reaches 300 records.
-
-# Known issues
-- ~~Unhandled exception:
-An error that occurs when saving two users with the same email address was not handled.~~  
-Resolved. The solution method is not effective,but it works.
 
 # Authorization  
 Spring Security is connected to the project. With start application two users are automatically created. 
