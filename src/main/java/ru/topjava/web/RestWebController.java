@@ -77,7 +77,7 @@ public class RestWebController extends ApplicationController {
         return super.getRestaurantsWithHistory();
     }
 
-    @GetMapping("/restaurants/history/{restaurantId}")
+    @GetMapping("/restaurants/{restaurantId}/history")
     public Restaurant getOneRestaurantsWithHistoryDish(@PathVariable int restaurantId) {
         return super.getOneRestaurantWithHistoryMenu(restaurantId);
     }
