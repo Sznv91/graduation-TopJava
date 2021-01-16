@@ -12,6 +12,7 @@ import ru.topjava.to.UserTo;
 import ru.topjava.utils.NotFoundException;
 import ru.topjava.utils.PermissionException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,7 +84,7 @@ class RestaurantServiceTest {
     @Test
     void getAllWithHistoryMenu() {
         List<Restaurant> expect = getAllRestaurantWithHistoryDish();
-        List<Restaurant> actual = service.getAllWithHistoryMenu();
+        List<Restaurant> actual = service.getAllWithHistoryMenu(LocalDate.of(0,1,1), LocalDate.of(9999,12,31));
 
         List<RestaurantTo> expectTo = expect.stream().map(RestaurantTo::getRestaurantTo).collect(Collectors.toList());
         List<RestaurantTo> actualTo = actual.stream().map(RestaurantTo::getRestaurantTo).collect(Collectors.toList());

@@ -19,6 +19,7 @@ import ru.topjava.to.UserTo;
 import ru.topjava.to.VoteTo;
 import ru.topjava.utils.PermissionException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,7 +123,7 @@ class ApplicationControllerTest {
 
     @Test
     void allRestaurantVoteCounterHistory() {
-        List<Restaurant> actual = controller.getRestaurantsWithHistory();
+        List<Restaurant> actual = controller.getRestaurantsWithHistory(LocalDate.of(0,1,1), LocalDate.of(9999,12,31));
         System.out.println(actual.get(0).getId() + " Restaurant ID");
         assertEquals(2, actual.get(0).getVoteCount());
     }

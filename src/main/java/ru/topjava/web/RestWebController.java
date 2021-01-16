@@ -2,7 +2,14 @@ package ru.topjava.web;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.controller.ApplicationController;
 import ru.topjava.entity.Dish;
@@ -18,6 +25,7 @@ import ru.topjava.utils.PermissionException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -73,8 +81,10 @@ public class RestWebController extends ApplicationController {
     }
 
     @GetMapping("/restaurants/history")
-    public List<Restaurant> getAllRestaurantsWithHistoryDish() {
-        return super.getRestaurantsWithHistory();
+    public List<Restaurant> getAllRestaurantsWithHistoryDish(@RequestParam("from") String from, @RequestParam("to") String to) {
+        LocalDate start = LocalDate.parse(from);
+        LocalDate end = LocalDate.parse(to);
+        return super.getRestaurantsWithHistory(start, end);
     }
 
     @GetMapping("/restaurants/{restaurantId}/history")

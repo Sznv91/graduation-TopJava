@@ -27,11 +27,10 @@ ___
 ```
 \  
 |-restaurants\  
-|            |-create
 |            |-history\
-|            |        |-{id}    
+|            |            
 |            |-{id}\
-|                  |-update
+|                  |-history
 |                  |-make_vote
 |                  |-add_dishes
 |    
@@ -70,12 +69,17 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Get Restaurant list with history menu
 ## Resource: 
-[/restaurants/history](http://localhost:8080/restaurants/history)
+/restaurants/history?from=YYYY-MM-dd&to=YYYY-MM-dd  
+###Example:  
+[/restaurants/history?from=2020-01-01&to=2021-01-01](http://localhost:8080/restaurants/history?from=2020-01-01&to=2021-01-01)  
+[/restaurants/history?from=2020-01-01&to=2021-12-01](http://localhost:8080/restaurants/history?from=2020-01-01&to=2021-12-01)
+
 ## Type
 >GET
 #### Description:
-Return Array restaurants in JSON format from DB that have any flag `"Enable"` and dishes of all date, and also Restaurants which do not have dish.
-Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant of all date.
+The resource is only available for users with the [ADMIN](#Authorization) role.
+Return Array restaurants in JSON format from DB that have any flag `"Enable"` and dishes for the specified period.
+Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant for the specified period.
 
 # Get single Restaurant with today menu
 ## Resource: 

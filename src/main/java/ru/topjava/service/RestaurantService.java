@@ -1,6 +1,5 @@
 package ru.topjava.service;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.topjava.entity.Dish;
@@ -10,6 +9,7 @@ import ru.topjava.repository.RestaurantRepository;
 import ru.topjava.to.UserTo;
 import ru.topjava.utils.PermissionException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -53,8 +53,8 @@ public class RestaurantService {
         return repository.getTodayList();
     }
 
-    public List<Restaurant> getAllWithHistoryMenu() {
-        return repository.getAllHistoryWithDish();
+    public List<Restaurant> getAllWithHistoryMenu(LocalDate start, LocalDate end) {
+        return repository.getHistoryWithDish(start, end);
     }
 
     public Restaurant getReference(int id) {

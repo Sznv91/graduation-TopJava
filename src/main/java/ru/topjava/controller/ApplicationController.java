@@ -10,7 +10,9 @@ import ru.topjava.service.UserService;
 import ru.topjava.service.VoteService;
 import ru.topjava.to.UserTo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -61,10 +63,10 @@ public class ApplicationController {
                 restaurantService.getAllWithTodayMenu());
     }
 
-    public List<Restaurant> getRestaurantsWithHistory() {
-        return getRestaurants(LocalDateTime.of(0, 1, 1, 1, 1)
-                , LocalDateTime.of(9999, 12, 31, 23, 59)
-                , restaurantService.getAllWithHistoryMenu());
+    public List<Restaurant> getRestaurantsWithHistory(LocalDate start, LocalDate end) {
+        return getRestaurants(LocalDateTime.of(start, LocalTime.of(0,0,0,0))
+                , LocalDateTime.of(end, LocalTime.of(23,59,59,999999999))
+                , restaurantService.getAllWithHistoryMenu(start, end));
     }
 
     private List<Restaurant> getRestaurants(LocalDateTime startDate, LocalDateTime endDate, List<Restaurant> restaurantList) {
