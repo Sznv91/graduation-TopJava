@@ -5,7 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.topjava.entity.User;
 import ru.topjava.entity.Vote;
 import ru.topjava.repository.VoteRepository;
+import ru.topjava.utils.ExistException;
 import ru.topjava.utils.LateToUpdate;
+import ru.topjava.utils.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -23,12 +25,21 @@ public class VoteService {
 
     @Transactional
     public Vote save(Vote vote) {
-        LocalDateTime todayLimiter = LocalDateTime.now().withHour(11).withMinute(0).withSecond(0).withNano(0);
-        return saveWithCustomDateLimiter(vote, todayLimiter);
+        if (voteToday(vote.getUser()) <= 0) {
+            return repository.create(vote);
+        } else {
+            throw new ExistException("User id: " + vote.getUser().getId() + " has already voted today.");
+        }
     }
 
     @Transactional
-    public Vote saveWithCustomDateLimiter(Vote vote, LocalDateTime todayLimiter) {
+    public Vote update(Vote vote) {
+        LocalDateTime todayLimiter = LocalDateTime.now().withHour(11).withMinute(0).withSecond(0).withNano(0);
+        return updateWithCustomDateLimiter(vote, todayLimiter);
+    }
+
+    @Transactional
+    public Vote updateWithCustomDateLimiter(Vote vote, LocalDateTime todayLimiter) {
         int voiceId = voteToday(vote.getUser());
         if (voiceId >= 0) {
             if (vote.getDate().isBefore(todayLimiter)) {
@@ -39,7 +50,7 @@ public class VoteService {
                         ". Restaurant id: " + vote.getRestaurant().getId());
             }
         } else {
-            return repository.create(vote);
+            throw new NotFoundException("To re-vote, you must first perform a vote.");
         }
     }
 
@@ -51,7 +62,7 @@ public class VoteService {
         return repository.hasVoteToday(user);
     }
 
-    public Map<Integer, Integer> getRestaurantsCount (LocalDateTime startDate, LocalDateTime endDate){
+    public Map<Integer, Integer> getRestaurantsCount(LocalDateTime startDate, LocalDateTime endDate) {
         return repository.getVoteMap(startDate, endDate);
     }
 }

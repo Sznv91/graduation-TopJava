@@ -38,7 +38,7 @@ public class CreatorUtil {
     private User getUser(User fromJson) {
         User result = new User();
         result.setName(fromJson.getName());
-        result.setRoles(Collections.singleton(Role.USER));
+        result.setRoles(fromJson.getRoles());
         result.setEmail(fromJson.getEmail());
         result.setPassword(fromJson.getPassword());
         return result;

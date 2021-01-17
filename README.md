@@ -15,11 +15,10 @@ Update: Added some test REST controller and Spring Security for demonstrate thei
 * [Delete Restaurant](#Delete-Restaurant)
 * [Add Dishes](#Add-Dishes)
 * [Vote for a restaurant](#Vote-for-the-restaurant)
+* [Re-voting for a restaurant](#Re-voting-for-the-restaurant)
 * [Update Restaurant](#Update-Restaurant)
-* [Create regular User](#Create-Regular-User)
-* [Create admin User](#Create-Admin)
+* [User Registration](#User-Registration)
 * [Cache](#Spring-Cache)
-* [Known issues](#Known-issues)
 * [Authorization](#Authorization)
 ___  
 
@@ -27,18 +26,15 @@ ___
 ```
 \  
 |-restaurants\  
-|            |-create
 |            |-history\
-|            |        |-{id}    
+|            |            
 |            |-{id}\
-|                  |-update
-|                  |-make_vote
+|                  |-history
+|                  |-vote
 |                  |-add_dishes
 |    
 |-user\
-      |-create
-             |-admin
-    
+      |-registration
 ```
 
 # Requirements Specification
@@ -61,7 +57,8 @@ Each restaurant provides a new menu each day.
 
 # Get Restaurant list with today menu
 ## Resource: 
-[/restaurants](http://localhost:8080/restaurants)
+[/restaurants](http://localhost:8080/restaurants)  
+`curl -u user@yandex.ru:password localhost:8080/restaurants`
 ## Type
 >GET
 #### Description:
@@ -70,16 +67,24 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Get Restaurant list with history menu
 ## Resource: 
-[/restaurants/history](http://localhost:8080/restaurants/history)
+/restaurants/history?from=YYYY-MM-dd&to=YYYY-MM-dd  
+###Example:  
+[/restaurants/history?from=2020-01-01&to=2021-01-01](http://localhost:8080/restaurants/history?from=2020-01-01&to=2021-01-01)  
+[/restaurants/history?from=2020-01-01&to=2021-12-01](http://localhost:8080/restaurants/history?from=2020-01-01&to=2021-12-01)  
+`curl -u admin@gmail.com:admin "localhost:8080/restaurants/history?from=2020-01-01&to=2021-01-01"`  
+`curl -u admin@gmail.com:admin "localhost:8080/restaurants/history?from=2020-01-01&to=2021-12-01"`
+
 ## Type
 >GET
 #### Description:
-Return Array restaurants in JSON format from DB that have any flag `"Enable"` and dishes of all date, and also Restaurants which do not have dish.
-Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant of all date.
+The resource is only available for users with the [ADMIN](#Authorization) role.
+Return Array restaurants in JSON format from DB that have any flag `"Enable"` and dishes for the specified period.
+Body of restaurant have field `"voteCount"` that shows quantity of vote which users gave for the restaurant for the specified period.
 
 # Get single Restaurant with today menu
 ## Resource: 
-/restaurants/{restaurantId}
+/restaurants/{restaurantId}  
+`curl -u user@yandex.ru:password localhost:8080/restaurants/100002`
 ___
 For demonstration, you can use for example [{restaurantId} = 100002](http://localhost:8080/restaurants/100002)
 ## Type
@@ -90,9 +95,10 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Get single Restaurant with history menu
 ## Resource: 
-/restaurants/{restaurantId}/history
+/restaurants/{restaurantId}/history  
+`curl -u admin@gmail.com:admin localhost:8080/restaurants/100003/history`
 ___
-For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/history/100003). It has a dish with date 2020.10.20
+For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/100003/history). It has a dish with date 2020.10.20
 ## Type
 >GET
 #### Description:
@@ -101,7 +107,10 @@ Body of restaurant have field `"voteCount"` that shows quantity of vote which us
 
 # Create Restaurant
 ## Resource: 
-[/restaurants](http://localhost:8080/restaurants)
+[/restaurants](http://localhost:8080/restaurants)  
+`curl -u admin@gmail.com:admin -H "Content-Type: application/json" --request POST --data "{\"name\": \"New Restaurant\"}" localhost:8080/restaurants`  
+Or  
+`curl -u admin@gmail.com:admin -H "Content-Type: application/json" --request POST --data "{\"name\":\"New restaurant\",\"menu\":[{\"cost\": 1.01,\"name\":\"first dish\"},{\"cost\": 2.1,\"name\":\"second dish\"}],\"enable\": true}" localhost:8080/restaurants`
 ## Type:
 >POST
 ### Format JSON:
@@ -149,10 +158,11 @@ The field "name" are required.
 
 # Add Dishes
 ## Resource:
-`/restaurants/{restaurantId}/add_dish`  
+`/restaurants/{restaurantId}/add_dishes`  
 
+`curl -u admin@gmail.com:admin -H "Content-Type: application/json" --request PUT --data "[{\"cost\": 10.01,\"name\": \"first dish First restaurant123\"},{\"cost\": 22.1,\"name\": \"second dish First restauran321t\"}]" localhost:8080/restaurants/100002/add_dishes`  
 ## Type:
->POST
+>PUT
 ### Format JSON:
 ```
  [
@@ -168,21 +178,39 @@ Added the dish will be had current date.
 
 # Vote for the restaurant
 ## Resource:
-`/restaurants/{restaurantId}/make_vote`
+`/restaurants/{restaurantId}/vote`  
+
+`curl -u user@yandex.ru:password -H "Content-Type: application/json" --request POST localhost:8080/restaurants/100003/vote`  
 
 ___
-For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/100003/make_vote)
+For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/100003/vote)
 ## Type:
->GET
+>POST
 #### Description:
 The resource allows to vote a single user for a restaurant. Voting can be made during the day. User can vote only for one restaurant.
-A second vote will update the vote for the other restaurant. Re-voting is only possible until 11am o'clock.
-For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number `26`.
+A second vote will call `ru.topjava.utils.ExistException`.
 After voting, the resource will return the [Restaurant](#Get-single-Restaurant-with-today-menu) with the changed vote counter.
+
+# Re voting for the restaurant
+## Resource:
+`/restaurants/{restaurantId}/vote`  
+
+`curl -u user@yandex.ru:password -H "Content-Type: application/json" --request PUT localhost:8080/restaurants/100002/vote`
+___
+For demonstration, you can use for example [{restaurantId} = 100002](http://localhost:8080/restaurants/100002/vote)
+## Type:
+>PUT
+#### Description:
+Update the vote for the restaurant. Re-voting is only possible until 11am o'clock.
+For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number `37`.
+After voting, the resource will return the [Restaurant](#Get-single-Restaurant-with-today-menu) with the changed vote counter.
+If re-vote without completing the vote, a `ru.topjava.utils.NotFoundException` exception will be thrown.
 
 # Update Restaurant
 ## Resource: 
-`/restaurants/{restaurantId}`
+`/restaurants/{restaurantId}`  
+
+`curl -u admin@gmail.com:admin -H "Content-Type: application/json" --request PUT --data "{\"id\":100003,\"name\":\"Changed name\",\"menu\":[{\"cost\":2.19,\"name\":\"Changed dish name\",\"date\":[2021,1,3]}],\"enable\":true}" localhost:8080/restaurants/100003`  
 ## Type:
 >PUT
 ### Format JSON:
@@ -229,9 +257,14 @@ Technical specification do not suggest deleting the restaurant, but you can set 
 This will prevent display the restaurant when is called the resource [Restaurant List with today menu](#Get-Restaurant-list-with-today-menu).
 
 
-# Create Regular User
+# User Registration
 ## Resource: 
-[/user/create](http://localhost:8080/user/create)
+[/user/registration](http://localhost:8080/user/registration)  
+### Curl  
+Admin registration:  
+`curl -H "Content-Type: application/json" --request POST --data "{\"name\": \"Admin Name\",\"email\": \"test@examlpe.edu\",\"password\": \"AnyPassword123\",\"roles\":[\"ADMIN\"]}" localhost:8080/user/registration`  
+User registration:  
+`curl -H "Content-Type: application/json" --request POST --data "{\"name\": \"User Name\",\"email\": \"test2@examlpe.edu\",\"password\": \"AnyPassword123\",\"roles\":[\"USER\"]}" localhost:8080/user/registration`  
 ## Type:
 >POST
 ### Format JSON:
@@ -239,31 +272,24 @@ This will prevent display the restaurant when is called the resource [Restaurant
 {
    "name": "String value",
    "email": "String value",
-   "password": "String value"
+   "password": "String value",
+   "roles":["ROLE"]
 }
 ```
 ### Example:
 ```JSON
 {
-   "name": "John Connor",
+   "name": "User Name",
    "email": "test@examlpe.edu",
-   "password": "AnyPassword123"
+   "password": "AnyPassword123",
+   "roles":["USER"]
 }
 ```
 #### Description: 
-Resource available not authorized users. Resource creat users with role "USER". For create with role "Admin" use [another resource](#Create-Admin).
+Resource available not authorized users. Resource creat users.
 If the "id" field is defined in the JSON body, it will be ignored and the new object "User" will be assigned an ID from the DB.
 The field "email" is unique.
 The fields "name", "email" and "password" are required.
-
-# Create Admin
-## Resource: 
-[/user/create/admin](http://localhost:8080/user/create/admin)
-## Type:
->POST
-#### Description:
-Resource create users with role "USER" and "ADMIN". Important: only user with role Admin can create new Admin.
-Remaining description does not differ from [Create User](#Create-Regular-User).
 
 # Spring Cache
 In application use two CacheManager with different parametrs:  

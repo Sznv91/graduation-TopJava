@@ -74,10 +74,16 @@ public class RestaurantRepository {
                 .getResultList();
     }
 
-    public List<Restaurant> getAllHistoryWithDish() {
+    public List<Restaurant> getHistoryWithDish(LocalDate start, LocalDate end) {
         return em.createQuery(
-                "SELECT r " +
-                        "FROM Restaurant r", Restaurant.class)
+                "SELECT DISTINCT r " +
+                        "FROM Restaurant r " +
+                        "JOIN FETCH r.menu d " +
+                        "WHERE d.date " +
+                        "BETWEEN :start AND :end " +
+                        "ORDER BY d.date desc", Restaurant.class)
+                .setParameter("start", start)
+                .setParameter("end", end)
                 .getResultList();
     }
 

@@ -18,11 +18,10 @@ import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.service.RestaurantTestData;
 import ru.topjava.service.UserTestData;
-import ru.topjava.utils.JsonUtil;
 import ru.topjava.utils.AuthUtil;
+import ru.topjava.utils.JsonUtil;
 
 import javax.annotation.PostConstruct;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -71,7 +70,7 @@ class RestWebControllerTest {
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(JsonUtil.getJsonString(expect)))
+                .andExpect(content().string(JsonUtil.getJsonString(expect)))
         ;
     }
 
@@ -97,8 +96,8 @@ class RestWebControllerTest {
                 new Dish("Late Dish First restaurant", 3.11, LocalDate.of(2020, 10, 20)),
                 new Dish("first dish First restaurant123", 10.01),
                 new Dish("second dish First restauran321t", 22.1));
-        perform(MockMvcRequestBuilders.post("/restaurants/100002/add_dishes").contentType(MediaType.APPLICATION_JSON).content("[{\"cost\":10.01,\"name\":\"first dish First restaurant123\"},{\"cost\":22.1,\"name\":\"second dish First restauran321t\"}]").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
-                .andExpect(status().isCreated())
+        perform(MockMvcRequestBuilders.put("/restaurants/100002/add_dishes").contentType(MediaType.APPLICATION_JSON).content("[{\"cost\":10.01,\"name\":\"first dish First restaurant123\"},{\"cost\":22.1,\"name\":\"second dish First restauran321t\"}]").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
+                .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(JsonUtil.getJsonString(expect)));
@@ -122,7 +121,7 @@ class RestWebControllerTest {
 
         expect.setVoteCount(1);
 
-        perform(MockMvcRequestBuilders.get("/restaurants/100003/make_vote").with(AuthUtil.userAuth(UserTestData.user)))
+        perform(MockMvcRequestBuilders.post("/restaurants/100003/vote").with(AuthUtil.userAuth(UserTestData.user)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
