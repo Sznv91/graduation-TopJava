@@ -15,6 +15,7 @@ Update: Added some test REST controller and Spring Security for demonstrate thei
 * [Delete Restaurant](#Delete-Restaurant)
 * [Add Dishes](#Add-Dishes)
 * [Vote for a restaurant](#Vote-for-the-restaurant)
+* [Re-voting for a restaurant](#Re-voting-for-the-restaurant)
 * [Update Restaurant](#Update-Restaurant)
 * [Create regular User](#Create-Regular-User)
 * [Create admin User](#Create-Admin)
@@ -31,7 +32,7 @@ ___
 |            |            
 |            |-{id}\
 |                  |-history
-|                  |-make_vote
+|                  |-vote
 |                  |-add_dishes
 |    
 |-user\
@@ -172,17 +173,29 @@ Added the dish will be had current date.
 
 # Vote for the restaurant
 ## Resource:
-`/restaurants/{restaurantId}/make_vote`
+`/restaurants/{restaurantId}/vote`
 
 ___
-For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/100003/make_vote)
+For demonstration, you can use for example [{restaurantId} = 100003](http://localhost:8080/restaurants/100003/vote)
 ## Type:
->GET
+>POST
 #### Description:
 The resource allows to vote a single user for a restaurant. Voting can be made during the day. User can vote only for one restaurant.
-A second vote will update the vote for the other restaurant. Re-voting is only possible until 11am o'clock.
-For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number `26`.
+A second vote will call `ru.topjava.utils.ExistException`.
 After voting, the resource will return the [Restaurant](#Get-single-Restaurant-with-today-menu) with the changed vote counter.
+
+# Re voting for the restaurant
+## Resource:
+`/restaurants/{restaurantId}/vote`
+___
+For demonstration, you can use for example [{restaurantId} = 100002](http://localhost:8080/restaurants/100002/vote)
+## Type:
+>PUT
+#### Description:
+Update the vote for the restaurant. Re-voting is only possible until 11am o'clock.
+For change vote time limiter you need change class `ru.topjava.service.VoteService.class` at string number `37`.
+After voting, the resource will return the [Restaurant](#Get-single-Restaurant-with-today-menu) with the changed vote counter.
+If re-vote without completing the vote, a `ru.topjava.utils.NotFoundException` exception will be thrown.
 
 # Update Restaurant
 ## Resource: 

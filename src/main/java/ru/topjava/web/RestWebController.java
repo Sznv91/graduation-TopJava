@@ -74,9 +74,15 @@ public class RestWebController extends ApplicationController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @RequestMapping("/restaurants/{restaurantId}/make_vote")
+    @PostMapping("/restaurants/{restaurantId}/vote")
     public Restaurant vote(@PathVariable int restaurantId, HttpServletResponse response) throws IOException {
         super.saveVote(restaurantId, SecurityUtil.authUserId());
+        return super.getOneRestaurantWithTodayMenu(restaurantId);
+    }
+
+    @PutMapping("/restaurants/{restaurantId}/vote")
+    public Restaurant reVote(@PathVariable int restaurantId, HttpServletResponse response) throws IOException {
+        super.reVote(restaurantId, SecurityUtil.authUserId());
         return super.getOneRestaurantWithTodayMenu(restaurantId);
     }
 

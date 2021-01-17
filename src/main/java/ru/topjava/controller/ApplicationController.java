@@ -64,8 +64,8 @@ public class ApplicationController {
     }
 
     public List<Restaurant> getRestaurantsWithHistory(LocalDate start, LocalDate end) {
-        return getRestaurants(LocalDateTime.of(start, LocalTime.of(0,0,0,0))
-                , LocalDateTime.of(end, LocalTime.of(23,59,59,999999999))
+        return getRestaurants(LocalDateTime.of(start, LocalTime.of(0, 0, 0, 0))
+                , LocalDateTime.of(end, LocalTime.of(23, 59, 59, 999999999))
                 , restaurantService.getAllWithHistoryMenu(start, end));
     }
 
@@ -77,9 +77,12 @@ public class ApplicationController {
     }
 
     public Vote saveVote(int restaurantId, int userId) {
-        Restaurant restaurant = restaurantService.getReference(restaurantId);
-        User user = userService.get(userId);
-        return voteService.save(new Vote(restaurant, user));
+        return voteService.save(new Vote(restaurantService.getReference(restaurantId), userService.getReference(userId)));
+
+    }
+
+    public Vote reVote(int restaurantId, int userId) {
+        return voteService.update(new Vote(restaurantService.getReference(restaurantId), userService.getReference(userId)));
     }
 
     public Boolean votedToday(int userId) {

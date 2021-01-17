@@ -18,11 +18,10 @@ import ru.topjava.entity.Dish;
 import ru.topjava.entity.Restaurant;
 import ru.topjava.service.RestaurantTestData;
 import ru.topjava.service.UserTestData;
-import ru.topjava.utils.JsonUtil;
 import ru.topjava.utils.AuthUtil;
+import ru.topjava.utils.JsonUtil;
 
 import javax.annotation.PostConstruct;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -71,7 +70,7 @@ class RestWebControllerTest {
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(JsonUtil.getJsonString(expect)))
+                .andExpect(content().string(JsonUtil.getJsonString(expect)))
         ;
     }
 
@@ -122,7 +121,7 @@ class RestWebControllerTest {
 
         expect.setVoteCount(1);
 
-        perform(MockMvcRequestBuilders.get("/restaurants/100003/make_vote").with(AuthUtil.userAuth(UserTestData.user)))
+        perform(MockMvcRequestBuilders.post("/restaurants/100003/vote").with(AuthUtil.userAuth(UserTestData.user)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

@@ -6,22 +6,20 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ru.topjava.config.GraduationJpaConfig;
-import ru.topjava.entity.Restaurant;
-import ru.topjava.entity.User;
 import ru.topjava.entity.Vote;
 import ru.topjava.to.VoteTo;
+import ru.topjava.utils.NotFoundException;
 
-import javax.validation.constraints.NotNull;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringJUnitConfig(GraduationJpaConfig.class)
 @Sql(scripts = {"classpath:initDB_H2.sql", "classpath:populateDB.sql"}, config = @SqlConfig(encoding = "UTF-8"))
 class VoteServiceTest {
+
+    private final LocalDateTime limiter = LocalDateTime.now().plusMinutes(2);
 
     @Autowired
     private VoteService service;
@@ -42,10 +40,9 @@ class VoteServiceTest {
 
     @Test
     void update() {
-        Vote expect =  VoteTestData.updatedVoteWithoutId;
+        Vote expect = VoteTestData.updatedVoteWithoutId;
         expect.setId(VoteTestData.EXIST_VOTE_ID);
-        LocalDateTime limiter = LocalDateTime.now().plusHours(1);
-        Vote actual = service.saveWithCustomDateLimiter(expect, limiter);
+        Vote actual = service.updateWithCustomDateLimiter(expect, limiter);
         assertEquals(VoteTo.getVoteTo(expect), VoteTo.getVoteTo(actual));
 
     }
@@ -53,10 +50,15 @@ class VoteServiceTest {
     @Test
     void updateWithoutVoteId() {
         Vote expect = VoteTestData.updatedVoteWithoutId;
-        LocalDateTime limiter = LocalDateTime.now().plusHours(1);
-        Vote actual = service.saveWithCustomDateLimiter(expect, limiter);
+        Vote actual = service.updateWithCustomDateLimiter(expect, limiter);
         expect.setId(VoteTestData.EXIST_VOTE_ID);
         assertEquals(VoteTo.getVoteTo(expect), VoteTo.getVoteTo(actual));
+    }
+
+    @Test
+    void updateNotExist() {
+        Vote expect = VoteTestData.newVote;
+        assertThrows(NotFoundException.class, () -> service.update(expect));
     }
 
 }
