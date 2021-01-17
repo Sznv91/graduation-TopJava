@@ -97,7 +97,7 @@ class RestWebControllerTest {
                 new Dish("first dish First restaurant123", 10.01),
                 new Dish("second dish First restauran321t", 22.1));
         perform(MockMvcRequestBuilders.put("/restaurants/100002/add_dishes").contentType(MediaType.APPLICATION_JSON).content("[{\"cost\":10.01,\"name\":\"first dish First restaurant123\"},{\"cost\":22.1,\"name\":\"second dish First restauran321t\"}]").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(JsonUtil.getJsonString(expect)));

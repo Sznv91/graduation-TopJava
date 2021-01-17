@@ -272,7 +272,8 @@ User registration:
 {
    "name": "String value",
    "email": "String value",
-   "password": "String value"
+   "password": "String value",
+   "roles":["ROLE"]
 }
 ```
 ### Example:
@@ -280,7 +281,8 @@ User registration:
 {
    "name": "User Name",
    "email": "test@examlpe.edu",
-   "password": "AnyPassword123"
+   "password": "AnyPassword123",
+   "roles":["USER"]
 }
 ```
 #### Description: 
