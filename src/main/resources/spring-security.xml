@@ -13,8 +13,7 @@
         <intercept-url pattern="/restaurants/{restaurantId}/update/**" access="hasRole('ADMIN')"/>
         <intercept-url pattern="/restaurants/history/**" access="hasRole('ADMIN')"/>
 
-        <intercept-url pattern="/user/create/admin**" access="hasRole('ADMIN')"/>
-        <intercept-url pattern="/user/create/" access="isAnonymous()"/>
+        <intercept-url pattern="/user/registration" access="isAnonymous()"/>
 
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <csrf disabled="true"/>

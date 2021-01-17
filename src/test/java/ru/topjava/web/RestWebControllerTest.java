@@ -96,7 +96,7 @@ class RestWebControllerTest {
                 new Dish("Late Dish First restaurant", 3.11, LocalDate.of(2020, 10, 20)),
                 new Dish("first dish First restaurant123", 10.01),
                 new Dish("second dish First restauran321t", 22.1));
-        perform(MockMvcRequestBuilders.post("/restaurants/100002/add_dishes").contentType(MediaType.APPLICATION_JSON).content("[{\"cost\":10.01,\"name\":\"first dish First restaurant123\"},{\"cost\":22.1,\"name\":\"second dish First restauran321t\"}]").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
+        perform(MockMvcRequestBuilders.put("/restaurants/100002/add_dishes").contentType(MediaType.APPLICATION_JSON).content("[{\"cost\":10.01,\"name\":\"first dish First restaurant123\"},{\"cost\":22.1,\"name\":\"second dish First restauran321t\"}]").accept(MediaType.APPLICATION_JSON).with(AuthUtil.userAuth(UserTestData.admin)))
                 .andExpect(status().isCreated())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

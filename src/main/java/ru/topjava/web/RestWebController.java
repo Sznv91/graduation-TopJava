@@ -49,8 +49,7 @@ public class RestWebController extends ApplicationController {
         return super.getOneRestaurantWithTodayMenu(restaurantId);
     }
 
-    @RequestMapping("/restaurants/{restaurantId}")
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/restaurants/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> updateRestaurantWithLocation(@PathVariable int restaurantId, @RequestBody Restaurant restaurant) {
         Restaurant created;
         if (restaurant.getId() != null && restaurant.getId().equals(restaurantId)) {
@@ -64,8 +63,7 @@ public class RestWebController extends ApplicationController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @RequestMapping("/restaurants/{restaurantId}/add_dishes")
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/restaurants/{restaurantId}/add_dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> addDishes(@PathVariable int restaurantId, @RequestBody List<Dish> dishes) {
         Restaurant created = super.addDishes(restaurantId, creatorUtil.getDishList(dishes), SecurityUtil.get().getUserTo());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -98,8 +96,7 @@ public class RestWebController extends ApplicationController {
         return super.getOneRestaurantWithHistoryMenu(restaurantId);
     }
 
-    @RequestMapping("/restaurants")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/restaurants", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createRestaurantWithLocation(@RequestBody Restaurant restaurant) {
         Restaurant created =
                 super.saveRestaurant(creatorUtil.get(Restaurant.class, restaurant), SecurityUtil.get().getUserTo());
@@ -114,31 +111,13 @@ public class RestWebController extends ApplicationController {
         return SecurityUtil.get().getUserTo();
     }
 
-    @RequestMapping("/user/create")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/user/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createUserWithLocation(@RequestBody User user) {
         User created = super.saveUser(creatorUtil.get(User.class, user));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/user/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
-    }
-
-    @RequestMapping("/user/create/admin")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createAdminWithLocation(@RequestBody User admin) {
-        User toCreated = creatorUtil.get(User.class, admin);
-        toCreated.setRoles(List.of(Role.ADMIN, Role.USER));
-        if (super.getUser(SecurityUtil.authUserId()).getRoles().contains(Role.ADMIN)) {
-            User created = super.saveUser(toCreated);
-            URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/user/{id}")
-                    .buildAndExpand(created.getId()).toUri();
-            return ResponseEntity.created(uriOfNewResource).body(created);
-        } else {
-            throw new PermissionException("Haven't role Admin to create new user with role Admin");
-        }
-
     }
 
 }
